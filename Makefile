@@ -14,6 +14,7 @@ typecheck:
 
 test:
 	uv run pytest
+	pnpm --dir apps/web test
 
 test-unit:
 	uv run pytest tests/unit
