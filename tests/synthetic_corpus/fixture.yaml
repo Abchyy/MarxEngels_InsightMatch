@@ -1,0 +1,360 @@
+fixture_version: synthetic_corpus_v1
+notice: "全部文本均为虚构合成数据，非马克思恩格斯原典，禁止作为引文。"
+embedding:
+  provider: synthetic
+  model: deterministic-4d-v1
+  dimension: 4
+
+corpora:
+  - corpus_id: synthetic_mecw_test
+    name: "合成测试语料（全部文本均为虚构）"
+    language: zh-CN
+    schema_version: 1
+    rights_status: approved
+    release_status: published
+    created_at: &created_at "2026-08-24T00:00:00Z"
+    updated_at: *created_at
+  - corpus_id: synthetic_scope_decoy
+    name: "合成范围隔离语料（虚构）"
+    language: zh-CN
+    schema_version: 1
+    rights_status: approved
+    release_status: published
+    created_at: *created_at
+    updated_at: *created_at
+
+editions:
+  - edition_id: synthetic_edition_v1
+    corpus_id: synthetic_mecw_test
+    publisher: Fixture Lab
+    publish_year: 2099
+    isbn: null
+    edition_label: "合成测试版（禁止引用）"
+    rights_status: approved
+    release_status: published
+    created_at: *created_at
+    updated_at: *created_at
+  - edition_id: synthetic_decoy_edition_v1
+    corpus_id: synthetic_scope_decoy
+    publisher: Fixture Lab
+    publish_year: 2099
+    isbn: null
+    edition_label: "范围隔离测试版（禁止引用）"
+    rights_status: approved
+    release_status: published
+    created_at: *created_at
+    updated_at: *created_at
+
+assets:
+  - asset_id: asset_syn_v01
+    asset_type: pdf
+    storage_uri: fixture://synthetic/v01.pdf
+    sha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    byte_size: 0
+    mime_type: application/pdf
+    created_at: *created_at
+  - asset_id: asset_syn_v02
+    asset_type: pdf
+    storage_uri: fixture://synthetic/v02.pdf
+    sha256: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    byte_size: 0
+    mime_type: application/pdf
+    created_at: *created_at
+  - asset_id: asset_syn_decoy
+    asset_type: pdf
+    storage_uri: fixture://synthetic/decoy.pdf
+    sha256: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    byte_size: 0
+    mime_type: application/pdf
+    created_at: *created_at
+
+volumes:
+  - volume_id: syn_v01
+    edition_id: synthetic_edition_v1
+    volume_no: 1
+    title: "[合成] 第一卷"
+    pdf_asset_id: asset_syn_v01
+    release_status: published
+  - volume_id: syn_v02
+    edition_id: synthetic_edition_v1
+    volume_no: 2
+    title: "[合成] 第二卷"
+    pdf_asset_id: asset_syn_v02
+    release_status: published
+  - volume_id: syn_decoy_v01
+    edition_id: synthetic_decoy_edition_v1
+    volume_no: 1
+    title: "[合成] 范围隔离卷"
+    pdf_asset_id: asset_syn_decoy
+    release_status: published
+
+works:
+  - work_id: syn_work_early
+    volume_id: syn_v01
+    title: "[合成] 早期协作材料"
+    author_code: marx
+    work_date_start: "1845"
+    work_date_end: "1845"
+    date_precision: year
+    date_source: synthetic_fixture
+    first_publication_date: null
+    order_no: 1
+    verification_status: verified
+    release_status: published
+  - work_id: syn_work_mid
+    volume_id: syn_v01
+    title: "[合成] 中期制度材料"
+    author_code: engels
+    work_date_start: "1852-01"
+    work_date_end: "1852-12"
+    date_precision: range
+    date_source: synthetic_fixture
+    first_publication_date: null
+    order_no: 2
+    verification_status: verified
+    release_status: published
+  - work_id: syn_work_disputed
+    volume_id: syn_v01
+    title: "[合成] 年代争议材料"
+    author_code: coauthored
+    work_date_start: null
+    work_date_end: null
+    date_precision: disputed
+    date_source: synthetic_fixture_disputed
+    first_publication_date: null
+    order_no: 3
+    verification_status: verified
+    release_status: published
+  - work_id: syn_work_late
+    volume_id: syn_v02
+    title: "[合成] 较晚传播材料"
+    author_code: engels
+    work_date_start: "1878"
+    work_date_end: null
+    date_precision: approximate
+    date_source: synthetic_fixture
+    first_publication_date: null
+    order_no: 1
+    verification_status: verified
+    release_status: published
+  - work_id: syn_work_unknown
+    volume_id: syn_v02
+    title: "[合成] 时间待考材料"
+    author_code: marx
+    work_date_start: null
+    work_date_end: null
+    date_precision: unknown
+    date_source: null
+    first_publication_date: null
+    order_no: 2
+    verification_status: verified
+    release_status: published
+  - work_id: syn_decoy_work
+    volume_id: syn_decoy_v01
+    title: "[合成] 范围外材料"
+    author_code: unknown
+    work_date_start: "1845"
+    work_date_end: "1845"
+    date_precision: year
+    date_source: synthetic_fixture
+    first_publication_date: null
+    order_no: 1
+    verification_status: verified
+    release_status: published
+
+sections:
+  - {section_id: syn_sec_early, work_id: syn_work_early, parent_id: null, title: "合成章节一", level: 1, order_no: 1, verification_status: verified}
+  - {section_id: syn_sec_mid, work_id: syn_work_mid, parent_id: null, title: "合成章节二", level: 1, order_no: 1, verification_status: verified}
+  - {section_id: syn_sec_disputed, work_id: syn_work_disputed, parent_id: null, title: "合成章节三", level: 1, order_no: 1, verification_status: verified}
+  - {section_id: syn_sec_late, work_id: syn_work_late, parent_id: null, title: "合成章节四", level: 1, order_no: 1, verification_status: verified}
+  - {section_id: syn_sec_unknown, work_id: syn_work_unknown, parent_id: null, title: "合成章节五", level: 1, order_no: 1, verification_status: verified}
+  - {section_id: syn_decoy_sec, work_id: syn_decoy_work, parent_id: null, title: "范围外章节", level: 1, order_no: 1, verification_status: verified}
+
+pages:
+  - {page_id: syn_page_v01_10, volume_id: syn_v01, pdf_page: 10, printed_page_label: "1", printed_page_number: 1, page_type: main, mapping_status: verified}
+  - {page_id: syn_page_v01_11, volume_id: syn_v01, pdf_page: 11, printed_page_label: "2", printed_page_number: 2, page_type: main, mapping_status: verified}
+  - {page_id: syn_page_v01_12, volume_id: syn_v01, pdf_page: 12, printed_page_label: "3", printed_page_number: 3, page_type: main, mapping_status: verified}
+  - {page_id: syn_page_v01_13, volume_id: syn_v01, pdf_page: 13, printed_page_label: "4", printed_page_number: 4, page_type: main, mapping_status: verified}
+  - {page_id: syn_page_v01_14, volume_id: syn_v01, pdf_page: 14, printed_page_label: "5", printed_page_number: 5, page_type: main, mapping_status: verified}
+  - {page_id: syn_page_v01_15, volume_id: syn_v01, pdf_page: 15, printed_page_label: "6", printed_page_number: 6, page_type: main, mapping_status: verified}
+  - {page_id: syn_page_v02_10, volume_id: syn_v02, pdf_page: 10, printed_page_label: "101", printed_page_number: 101, page_type: main, mapping_status: verified}
+  - {page_id: syn_page_v02_11, volume_id: syn_v02, pdf_page: 11, printed_page_label: "102", printed_page_number: 102, page_type: main, mapping_status: verified}
+  - {page_id: syn_page_v02_12, volume_id: syn_v02, pdf_page: 12, printed_page_label: "103", printed_page_number: 103, page_type: main, mapping_status: verified}
+  - {page_id: syn_page_v02_13, volume_id: syn_v02, pdf_page: 13, printed_page_label: "104", printed_page_number: 104, page_type: main, mapping_status: verified}
+  - {page_id: syn_page_v02_14, volume_id: syn_v02, pdf_page: 14, printed_page_label: "105", printed_page_number: 105, page_type: main, mapping_status: verified}
+  - {page_id: syn_decoy_page_10, volume_id: syn_decoy_v01, pdf_page: 10, printed_page_label: "1", printed_page_number: 1, page_type: main, mapping_status: verified}
+
+passages:
+  - evidence_id: ev_syn_early_001
+    section_id: syn_sec_early
+    content_type: main_text
+    verified_text: "【合成数据，非原典】协作劳动会改变群体之间的关系，劳动也会塑造新的交往方式。"
+    prev_id: null
+    next_id: ev_syn_early_002
+    order_no: 1
+    verification_status: verified
+    release_status: published
+  - evidence_id: ev_syn_early_002
+    section_id: syn_sec_early
+    content_type: main_text
+    verified_text: "【合成数据，非原典】公共讨论在小型共同体中依靠面对面的交换展开。"
+    prev_id: ev_syn_early_001
+    next_id: null
+    order_no: 2
+    verification_status: verified
+    release_status: published
+  - evidence_id: ev_syn_mid_001
+    section_id: syn_sec_mid
+    content_type: main_text
+    verified_text: "【合成数据，非原典】制度安排影响生产关系，也会改变公共讨论的传播路径。"
+    prev_id: null
+    next_id: ev_syn_mid_002
+    order_no: 1
+    verification_status: verified
+    release_status: published
+  - evidence_id: ev_syn_mid_002
+    section_id: syn_sec_mid
+    content_type: main_text
+    verified_text: "【合成数据，非原典】不能把所有社会变化都简单归因于协作劳动，反例必须单独考察。"
+    prev_id: ev_syn_mid_001
+    next_id: ev_syn_mid_crosspage
+    order_no: 2
+    verification_status: verified
+    release_status: published
+  - evidence_id: ev_syn_mid_crosspage
+    section_id: syn_sec_mid
+    content_type: author_note
+    verified_text: "【合成数据，非原典】跨页材料用于验证同一证据对应多个印刷页和PDF页。"
+    prev_id: ev_syn_mid_002
+    next_id: null
+    order_no: 3
+    verification_status: verified
+    release_status: published
+  - evidence_id: ev_syn_disputed_001
+    section_id: syn_sec_disputed
+    content_type: main_text
+    verified_text: "【合成数据，非原典】这份公共讨论材料的写作年代存在争议。"
+    prev_id: null
+    next_id: null
+    order_no: 1
+    verification_status: verified
+    release_status: published
+  - evidence_id: ev_syn_late_001
+    section_id: syn_sec_late
+    content_type: main_text
+    verified_text: "【合成数据，非原典】较晚时期的公共讨论借助新的传播网络扩展。"
+    prev_id: null
+    next_id: ev_syn_late_002
+    order_no: 1
+    verification_status: verified
+    release_status: published
+  - evidence_id: ev_syn_late_002
+    section_id: syn_sec_late
+    content_type: main_text
+    verified_text: "【合成数据，非原典】生产关系与制度安排相互作用，但二者不能被视为同一概念。"
+    prev_id: ev_syn_late_001
+    next_id: null
+    order_no: 2
+    verification_status: verified
+    release_status: published
+  - evidence_id: ev_syn_unknown_001
+    section_id: syn_sec_unknown
+    content_type: main_text
+    verified_text: "【合成数据，非原典】这份材料讨论公共讨论，但无法确定写作时间。"
+    prev_id: null
+    next_id: ev_syn_unpublished_001
+    order_no: 1
+    verification_status: verified
+    release_status: published
+  - evidence_id: ev_syn_unpublished_001
+    section_id: syn_sec_unknown
+    content_type: main_text
+    verified_text: "【合成数据，非原典】未发布材料中的劳动一词不得进入结果。"
+    prev_id: ev_syn_unknown_001
+    next_id: ev_syn_unverified_001
+    order_no: 2
+    verification_status: verified
+    release_status: draft
+  - evidence_id: ev_syn_unverified_001
+    section_id: syn_sec_unknown
+    content_type: main_text
+    verified_text: "【合成数据，非原典】未核验材料中的劳动一词不得进入结果。"
+    prev_id: ev_syn_unpublished_001
+    next_id: null
+    order_no: 3
+    verification_status: initial_review
+    release_status: draft
+  - evidence_id: ev_syn_decoy_001
+    section_id: syn_decoy_sec
+    content_type: main_text
+    verified_text: "【合成数据，非原典】范围外语料也包含劳动，但不得泄漏到目标范围。"
+    prev_id: null
+    next_id: null
+    order_no: 1
+    verification_status: verified
+    release_status: published
+
+passage_pages:
+  - {evidence_id: ev_syn_early_001, page_id: syn_page_v01_10, order_no: 1, start_offset: 0, end_offset: 42}
+  - {evidence_id: ev_syn_early_002, page_id: syn_page_v01_11, order_no: 1, start_offset: 0, end_offset: 35}
+  - {evidence_id: ev_syn_mid_001, page_id: syn_page_v01_12, order_no: 1, start_offset: 0, end_offset: 35}
+  - {evidence_id: ev_syn_mid_002, page_id: syn_page_v01_13, order_no: 1, start_offset: 0, end_offset: 43}
+  - {evidence_id: ev_syn_mid_crosspage, page_id: syn_page_v01_13, order_no: 1, start_offset: 43, end_offset: null}
+  - {evidence_id: ev_syn_mid_crosspage, page_id: syn_page_v01_14, order_no: 2, start_offset: 0, end_offset: 18}
+  - {evidence_id: ev_syn_disputed_001, page_id: syn_page_v01_15, order_no: 1, start_offset: 0, end_offset: 31}
+  - {evidence_id: ev_syn_late_001, page_id: syn_page_v02_10, order_no: 1, start_offset: 0, end_offset: 34}
+  - {evidence_id: ev_syn_late_002, page_id: syn_page_v02_11, order_no: 1, start_offset: 0, end_offset: 39}
+  - {evidence_id: ev_syn_unknown_001, page_id: syn_page_v02_12, order_no: 1, start_offset: 0, end_offset: 32}
+  - {evidence_id: ev_syn_unpublished_001, page_id: syn_page_v02_13, order_no: 1, start_offset: 0, end_offset: 32}
+  - {evidence_id: ev_syn_unverified_001, page_id: syn_page_v02_14, order_no: 1, start_offset: 0, end_offset: 32}
+  - {evidence_id: ev_syn_decoy_001, page_id: syn_decoy_page_10, order_no: 1, start_offset: 0, end_offset: 38}
+
+data_releases:
+  - data_version: data_synthetic_v1
+    corpus_id: synthetic_mecw_test
+    passage_count: 9
+    manifest_hash: synthetic-manifest-v1
+    status: published
+    created_at: *created_at
+    published_at: *created_at
+  - data_version: data_synthetic_decoy_v1
+    corpus_id: synthetic_scope_decoy
+    passage_count: 1
+    manifest_hash: synthetic-decoy-manifest-v1
+    status: published
+    created_at: *created_at
+    published_at: *created_at
+
+index_releases:
+  - index_version: idx_synthetic_v1
+    data_version: data_synthetic_v1
+    embedding_provider: synthetic
+    embedding_model: deterministic-4d-v1
+    embedding_dimension: 4
+    config_hash: synthetic-config-v1
+    row_count: 9
+    status: published
+    created_at: *created_at
+    published_at: *created_at
+  - index_version: idx_synthetic_decoy_v1
+    data_version: data_synthetic_decoy_v1
+    embedding_provider: synthetic
+    embedding_model: deterministic-4d-v1
+    embedding_dimension: 4
+    config_hash: synthetic-decoy-config-v1
+    row_count: 1
+    status: published
+    created_at: *created_at
+    published_at: *created_at
+
+vectors:
+  - {retrieval_unit_id: ru_syn_early_001, evidence_id: ev_syn_early_001, vector: [0.95, 0.05, 0.00, 0.00]}
+  - {retrieval_unit_id: ru_syn_early_002, evidence_id: ev_syn_early_002, vector: [0.05, 0.95, 0.00, 0.00]}
+  - {retrieval_unit_id: ru_syn_mid_001, evidence_id: ev_syn_mid_001, vector: [0.20, 0.20, 0.90, 0.00]}
+  - {retrieval_unit_id: ru_syn_mid_002, evidence_id: ev_syn_mid_002, vector: [0.85, 0.10, 0.10, 0.00]}
+  - {retrieval_unit_id: ru_syn_mid_crosspage, evidence_id: ev_syn_mid_crosspage, vector: [0.00, 0.00, 0.00, 1.00]}
+  - {retrieval_unit_id: ru_syn_disputed_001, evidence_id: ev_syn_disputed_001, vector: [0.10, 0.80, 0.10, 0.00]}
+  - {retrieval_unit_id: ru_syn_late_001, evidence_id: ev_syn_late_001, vector: [0.10, 0.90, 0.10, 0.00]}
+  - {retrieval_unit_id: ru_syn_late_002, evidence_id: ev_syn_late_002, vector: [0.40, 0.10, 0.85, 0.00]}
+  - {retrieval_unit_id: ru_syn_unknown_001, evidence_id: ev_syn_unknown_001, vector: [0.10, 0.75, 0.10, 0.00]}
+  - {retrieval_unit_id: ru_syn_decoy_001, evidence_id: ev_syn_decoy_001, vector: [1.00, 0.00, 0.00, 0.00]}
