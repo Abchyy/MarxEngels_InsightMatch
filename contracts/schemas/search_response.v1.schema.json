@@ -1,0 +1,582 @@
+{
+  "$defs": {
+    "AuthorCode": {
+      "enum": [
+        "marx",
+        "engels",
+        "coauthored",
+        "attributed",
+        "unknown"
+      ],
+      "title": "AuthorCode",
+      "type": "string"
+    },
+    "ContentType": {
+      "enum": [
+        "main_text",
+        "author_note",
+        "editor_note",
+        "footnote"
+      ],
+      "title": "ContentType",
+      "type": "string"
+    },
+    "DatePrecision": {
+      "enum": [
+        "day",
+        "month",
+        "year",
+        "range",
+        "approximate",
+        "disputed",
+        "unknown"
+      ],
+      "title": "DatePrecision",
+      "type": "string"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "title": "Author",
+          "type": "string"
+        },
+        "content_type": {
+          "$ref": "#/$defs/ContentType"
+        },
+        "corpus_name": {
+          "title": "Corpus Name",
+          "type": "string"
+        },
+        "date_precision": {
+          "$ref": "#/$defs/DatePrecision"
+        },
+        "edition_label": {
+          "title": "Edition Label",
+          "type": "string"
+        },
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "exact_match_count": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exact Match Count"
+        },
+        "match_offsets": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Match Offsets",
+          "type": "array"
+        },
+        "match_type": {
+          "title": "Match Type",
+          "type": "string"
+        },
+        "next_evidence_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Next Evidence Id"
+        },
+        "pdf_pages": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Pdf Pages",
+          "type": "array"
+        },
+        "prev_evidence_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prev Evidence Id"
+        },
+        "printed_pages": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Printed Pages",
+          "type": "array"
+        },
+        "rank_reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Rank Reasons",
+          "type": "array"
+        },
+        "support_label": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SupportLabel"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "verified_text": {
+          "minLength": 1,
+          "title": "Verified Text",
+          "type": "string"
+        },
+        "volume_no": {
+          "minimum": 1,
+          "title": "Volume No",
+          "type": "integer"
+        },
+        "work_date_end": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Work Date End"
+        },
+        "work_date_start": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Work Date Start"
+        },
+        "work_title": {
+          "title": "Work Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "verified_text",
+        "content_type",
+        "author",
+        "work_title",
+        "corpus_name",
+        "edition_label",
+        "volume_no",
+        "date_precision",
+        "match_type"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "Insufficiency": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "details": {
+          "additionalProperties": true,
+          "title": "Details",
+          "type": "object"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "Insufficiency",
+      "type": "object"
+    },
+    "ReleaseInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "data_version": {
+          "title": "Data Version",
+          "type": "string"
+        },
+        "embedding_model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Embedding Model"
+        },
+        "index_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Index Version"
+        },
+        "released_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Released At"
+        }
+      },
+      "required": [
+        "data_version"
+      ],
+      "title": "ReleaseInfo",
+      "type": "object"
+    },
+    "ResultGroup": {
+      "additionalProperties": false,
+      "properties": {
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "date_end": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Date End"
+        },
+        "date_precision": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DatePrecision"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "date_start": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Date Start"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "group_id": {
+          "title": "Group Id",
+          "type": "string"
+        },
+        "group_type": {
+          "title": "Group Type",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "summary": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Summary"
+        }
+      },
+      "required": [
+        "group_id",
+        "label",
+        "group_type"
+      ],
+      "title": "ResultGroup",
+      "type": "object"
+    },
+    "SearchMode": {
+      "enum": [
+        "exact",
+        "claim",
+        "timeline",
+        "thematic"
+      ],
+      "title": "SearchMode",
+      "type": "string"
+    },
+    "SearchOverview": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_count": {
+          "minimum": 0,
+          "title": "Evidence Count",
+          "type": "integer"
+        },
+        "result_note": {
+          "default": "以下组织只基于列出的证据。",
+          "title": "Result Note",
+          "type": "string"
+        },
+        "volume_count": {
+          "minimum": 0,
+          "title": "Volume Count",
+          "type": "integer"
+        },
+        "work_count": {
+          "minimum": 0,
+          "title": "Work Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "evidence_count",
+        "work_count",
+        "volume_count"
+      ],
+      "title": "SearchOverview",
+      "type": "object"
+    },
+    "SearchScope": {
+      "additionalProperties": false,
+      "properties": {
+        "authors": {
+          "items": {
+            "$ref": "#/$defs/AuthorCode"
+          },
+          "title": "Authors",
+          "type": "array"
+        },
+        "content_types": {
+          "items": {
+            "$ref": "#/$defs/ContentType"
+          },
+          "title": "Content Types",
+          "type": "array"
+        },
+        "corpus_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Corpus Ids",
+          "type": "array"
+        },
+        "edition_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Edition Ids",
+          "type": "array"
+        },
+        "volume_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Volume Ids",
+          "type": "array"
+        },
+        "work_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Work Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "corpus_ids"
+      ],
+      "title": "SearchScope",
+      "type": "object"
+    },
+    "SupportLabel": {
+      "enum": [
+        "direct",
+        "indirect",
+        "counter",
+        "context_only",
+        "irrelevant"
+      ],
+      "title": "SupportLabel",
+      "type": "string"
+    },
+    "Warning": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "stage": {
+          "title": "Stage",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "stage"
+      ],
+      "title": "Warning",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "classification_notice": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Classification Notice"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "groups": {
+      "items": {
+        "$ref": "#/$defs/ResultGroup"
+      },
+      "title": "Groups",
+      "type": "array"
+    },
+    "insufficiency": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Insufficiency"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "mode": {
+      "$ref": "#/$defs/SearchMode"
+    },
+    "next_cursor": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Next Cursor"
+    },
+    "overview": {
+      "$ref": "#/$defs/SearchOverview"
+    },
+    "query": {
+      "title": "Query",
+      "type": "string"
+    },
+    "release": {
+      "$ref": "#/$defs/ReleaseInfo"
+    },
+    "request_id": {
+      "title": "Request Id",
+      "type": "string"
+    },
+    "scope_snapshot": {
+      "$ref": "#/$defs/SearchScope"
+    },
+    "warnings": {
+      "items": {
+        "$ref": "#/$defs/Warning"
+      },
+      "title": "Warnings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "request_id",
+    "mode",
+    "query",
+    "scope_snapshot",
+    "release",
+    "overview"
+  ],
+  "title": "SearchResponse",
+  "type": "object"
+}

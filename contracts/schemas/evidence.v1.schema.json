@@ -1,0 +1,195 @@
+{
+  "$defs": {
+    "ContentType": {
+      "enum": [
+        "main_text",
+        "author_note",
+        "editor_note",
+        "footnote"
+      ],
+      "title": "ContentType",
+      "type": "string"
+    },
+    "DatePrecision": {
+      "enum": [
+        "day",
+        "month",
+        "year",
+        "range",
+        "approximate",
+        "disputed",
+        "unknown"
+      ],
+      "title": "DatePrecision",
+      "type": "string"
+    },
+    "SupportLabel": {
+      "enum": [
+        "direct",
+        "indirect",
+        "counter",
+        "context_only",
+        "irrelevant"
+      ],
+      "title": "SupportLabel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "author": {
+      "title": "Author",
+      "type": "string"
+    },
+    "content_type": {
+      "$ref": "#/$defs/ContentType"
+    },
+    "corpus_name": {
+      "title": "Corpus Name",
+      "type": "string"
+    },
+    "date_precision": {
+      "$ref": "#/$defs/DatePrecision"
+    },
+    "edition_label": {
+      "title": "Edition Label",
+      "type": "string"
+    },
+    "evidence_id": {
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "exact_match_count": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Exact Match Count"
+    },
+    "match_offsets": {
+      "items": {
+        "type": "integer"
+      },
+      "title": "Match Offsets",
+      "type": "array"
+    },
+    "match_type": {
+      "title": "Match Type",
+      "type": "string"
+    },
+    "next_evidence_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Next Evidence Id"
+    },
+    "pdf_pages": {
+      "items": {
+        "type": "integer"
+      },
+      "title": "Pdf Pages",
+      "type": "array"
+    },
+    "prev_evidence_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Prev Evidence Id"
+    },
+    "printed_pages": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Printed Pages",
+      "type": "array"
+    },
+    "rank_reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Rank Reasons",
+      "type": "array"
+    },
+    "support_label": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SupportLabel"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "verified_text": {
+      "minLength": 1,
+      "title": "Verified Text",
+      "type": "string"
+    },
+    "volume_no": {
+      "minimum": 1,
+      "title": "Volume No",
+      "type": "integer"
+    },
+    "work_date_end": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Work Date End"
+    },
+    "work_date_start": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Work Date Start"
+    },
+    "work_title": {
+      "title": "Work Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "evidence_id",
+    "verified_text",
+    "content_type",
+    "author",
+    "work_title",
+    "corpus_name",
+    "edition_label",
+    "volume_no",
+    "date_precision",
+    "match_type"
+  ],
+  "title": "Evidence",
+  "type": "object"
+}

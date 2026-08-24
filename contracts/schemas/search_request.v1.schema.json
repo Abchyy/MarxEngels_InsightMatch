@@ -1,0 +1,166 @@
+{
+  "$defs": {
+    "AuthorCode": {
+      "enum": [
+        "marx",
+        "engels",
+        "coauthored",
+        "attributed",
+        "unknown"
+      ],
+      "title": "AuthorCode",
+      "type": "string"
+    },
+    "ContentType": {
+      "enum": [
+        "main_text",
+        "author_note",
+        "editor_note",
+        "footnote"
+      ],
+      "title": "ContentType",
+      "type": "string"
+    },
+    "SearchMode": {
+      "enum": [
+        "exact",
+        "claim",
+        "timeline",
+        "thematic"
+      ],
+      "title": "SearchMode",
+      "type": "string"
+    },
+    "SearchOptions": {
+      "additionalProperties": false,
+      "properties": {
+        "include_counter_evidence": {
+          "default": true,
+          "title": "Include Counter Evidence",
+          "type": "boolean"
+        },
+        "include_generated_summaries": {
+          "default": true,
+          "title": "Include Generated Summaries",
+          "type": "boolean"
+        }
+      },
+      "title": "SearchOptions",
+      "type": "object"
+    },
+    "SearchScope": {
+      "additionalProperties": false,
+      "properties": {
+        "authors": {
+          "items": {
+            "$ref": "#/$defs/AuthorCode"
+          },
+          "title": "Authors",
+          "type": "array"
+        },
+        "content_types": {
+          "items": {
+            "$ref": "#/$defs/ContentType"
+          },
+          "title": "Content Types",
+          "type": "array"
+        },
+        "corpus_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Corpus Ids",
+          "type": "array"
+        },
+        "edition_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Edition Ids",
+          "type": "array"
+        },
+        "volume_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Volume Ids",
+          "type": "array"
+        },
+        "work_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Work Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "corpus_ids"
+      ],
+      "title": "SearchScope",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "cursor": {
+      "anyOf": [
+        {
+          "maxLength": 2048,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cursor"
+    },
+    "mode": {
+      "$ref": "#/$defs/SearchMode"
+    },
+    "options": {
+      "$ref": "#/$defs/SearchOptions"
+    },
+    "page_size": {
+      "default": 20,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Page Size",
+      "type": "integer"
+    },
+    "query": {
+      "maxLength": 500,
+      "minLength": 1,
+      "title": "Query",
+      "type": "string"
+    },
+    "scope": {
+      "$ref": "#/$defs/SearchScope"
+    },
+    "sort": {
+      "anyOf": [
+        {
+          "enum": [
+            "relevance",
+            "document_order"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Sort"
+    }
+  },
+  "required": [
+    "query",
+    "mode",
+    "scope"
+  ],
+  "title": "SearchRequest",
+  "type": "object"
+}

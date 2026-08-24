@@ -1,0 +1,10 @@
+schema_version: 1
+corpus_id: marx_engels_collected_works_cn
+display_name: 马克思恩格斯文集
+language: zh-CN
+edition_id: people_press_2009_cn
+publisher: 人民出版社
+publish_year: 2009
+volume_count: 10
+rights_status: pending_review
+release_status: draft

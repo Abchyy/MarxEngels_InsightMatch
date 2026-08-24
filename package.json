@@ -1,0 +1,12 @@
+{
+  "name": "marx-engels-insight-match",
+  "private": true,
+  "packageManager": "pnpm@10.15.0",
+  "scripts": {
+    "build": "pnpm --dir apps/web build",
+    "dev": "pnpm --dir apps/web dev",
+    "generate:api": "pnpm --dir apps/web generate:api",
+    "lint": "pnpm --dir apps/web lint",
+    "typecheck": "pnpm --dir apps/web typecheck"
+  }
+}

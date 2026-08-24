@@ -1,0 +1,1 @@
+"""Derived index construction boundary."""

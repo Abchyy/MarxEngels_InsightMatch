@@ -1,0 +1,1640 @@
+{
+  "components": {
+    "schemas": {
+      "AuthorCode": {
+        "enum": [
+          "marx",
+          "engels",
+          "coauthored",
+          "attributed",
+          "unknown"
+        ],
+        "title": "AuthorCode",
+        "type": "string"
+      },
+      "ContentType": {
+        "enum": [
+          "main_text",
+          "author_note",
+          "editor_note",
+          "footnote"
+        ],
+        "title": "ContentType",
+        "type": "string"
+      },
+      "ContextItem": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence": {
+            "$ref": "#/components/schemas/Evidence"
+          },
+          "is_target": {
+            "title": "Is Target",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "evidence",
+          "is_target"
+        ],
+        "title": "ContextItem",
+        "type": "object"
+      },
+      "ContextResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ContextItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "target_evidence_id": {
+            "title": "Target Evidence Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target_evidence_id",
+          "items"
+        ],
+        "title": "ContextResponse",
+        "type": "object"
+      },
+      "CorporaResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CorpusSummary"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "title": "CorporaResponse",
+        "type": "object"
+      },
+      "CorpusSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "corpus_id": {
+            "title": "Corpus Id",
+            "type": "string"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "language": {
+            "title": "Language",
+            "type": "string"
+          },
+          "release_status": {
+            "title": "Release Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "corpus_id",
+          "display_name",
+          "language",
+          "release_status"
+        ],
+        "title": "CorpusSummary",
+        "type": "object"
+      },
+      "DatePrecision": {
+        "enum": [
+          "day",
+          "month",
+          "year",
+          "range",
+          "approximate",
+          "disputed",
+          "unknown"
+        ],
+        "title": "DatePrecision",
+        "type": "string"
+      },
+      "ErrorBody": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "details": {
+            "additionalProperties": true,
+            "title": "Details",
+            "type": "object"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "retryable": {
+            "default": false,
+            "title": "Retryable",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorBody",
+        "type": "object"
+      },
+      "ErrorResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorBody"
+          },
+          "request_id": {
+            "title": "Request Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_id",
+          "error"
+        ],
+        "title": "ErrorResponse",
+        "type": "object"
+      },
+      "Evidence": {
+        "additionalProperties": false,
+        "properties": {
+          "author": {
+            "title": "Author",
+            "type": "string"
+          },
+          "content_type": {
+            "$ref": "#/components/schemas/ContentType"
+          },
+          "corpus_name": {
+            "title": "Corpus Name",
+            "type": "string"
+          },
+          "date_precision": {
+            "$ref": "#/components/schemas/DatePrecision"
+          },
+          "edition_label": {
+            "title": "Edition Label",
+            "type": "string"
+          },
+          "evidence_id": {
+            "title": "Evidence Id",
+            "type": "string"
+          },
+          "exact_match_count": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Exact Match Count"
+          },
+          "match_offsets": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Match Offsets",
+            "type": "array"
+          },
+          "match_type": {
+            "title": "Match Type",
+            "type": "string"
+          },
+          "next_evidence_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Evidence Id"
+          },
+          "pdf_pages": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Pdf Pages",
+            "type": "array"
+          },
+          "prev_evidence_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prev Evidence Id"
+          },
+          "printed_pages": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Printed Pages",
+            "type": "array"
+          },
+          "rank_reasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Rank Reasons",
+            "type": "array"
+          },
+          "support_label": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SupportLabel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verified_text": {
+            "minLength": 1,
+            "title": "Verified Text",
+            "type": "string"
+          },
+          "volume_no": {
+            "minimum": 1.0,
+            "title": "Volume No",
+            "type": "integer"
+          },
+          "work_date_end": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Work Date End"
+          },
+          "work_date_start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Work Date Start"
+          },
+          "work_title": {
+            "title": "Work Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "evidence_id",
+          "verified_text",
+          "content_type",
+          "author",
+          "work_title",
+          "corpus_name",
+          "edition_label",
+          "volume_no",
+          "date_precision",
+          "match_type"
+        ],
+        "title": "Evidence",
+        "type": "object"
+      },
+      "FeedbackRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "enum": [
+              "ocr_error",
+              "page_mismatch",
+              "work_metadata_error",
+              "author_error",
+              "context_boundary_error",
+              "irrelevant_result",
+              "other"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "client_context": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Client Context",
+            "type": "object"
+          },
+          "comment": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Comment",
+            "type": "string"
+          },
+          "evidence_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Evidence Id"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Request Id"
+          }
+        },
+        "required": [
+          "category",
+          "comment"
+        ],
+        "title": "FeedbackRequest",
+        "type": "object"
+      },
+      "FeedbackResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "feedback_id": {
+            "title": "Feedback Id",
+            "type": "string"
+          },
+          "status": {
+            "const": "pending",
+            "default": "pending",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "feedback_id"
+        ],
+        "title": "FeedbackResponse",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HealthResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "checks": {
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "title": "Checks",
+            "type": "object"
+          },
+          "status": {
+            "enum": [
+              "ok",
+              "not_ready"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "HealthResponse",
+        "type": "object"
+      },
+      "Insufficiency": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "details": {
+            "additionalProperties": true,
+            "title": "Details",
+            "type": "object"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "Insufficiency",
+        "type": "object"
+      },
+      "ModeSuggestionRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Query",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "ModeSuggestionRequest",
+        "type": "object"
+      },
+      "ModeSuggestionResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "allowed_modes": {
+            "items": {
+              "$ref": "#/components/schemas/SearchMode"
+            },
+            "title": "Allowed Modes",
+            "type": "array"
+          },
+          "confidence": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "reason_code": {
+            "title": "Reason Code",
+            "type": "string"
+          },
+          "requires_user_selection": {
+            "title": "Requires User Selection",
+            "type": "boolean"
+          },
+          "suggested_mode": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SearchMode"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "suggested_mode",
+          "confidence",
+          "requires_user_selection",
+          "allowed_modes",
+          "reason_code"
+        ],
+        "title": "ModeSuggestionResponse",
+        "type": "object"
+      },
+      "PdfLocationResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "asset_id": {
+            "title": "Asset Id",
+            "type": "string"
+          },
+          "coordinates": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Coordinates"
+          },
+          "end_pdf_page": {
+            "minimum": 1.0,
+            "title": "End Pdf Page",
+            "type": "integer"
+          },
+          "evidence_id": {
+            "title": "Evidence Id",
+            "type": "string"
+          },
+          "printed_pages": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Printed Pages",
+            "type": "array"
+          },
+          "start_pdf_page": {
+            "minimum": 1.0,
+            "title": "Start Pdf Page",
+            "type": "integer"
+          },
+          "viewer_url": {
+            "title": "Viewer Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "evidence_id",
+          "asset_id",
+          "viewer_url",
+          "start_pdf_page",
+          "end_pdf_page",
+          "printed_pages"
+        ],
+        "title": "PdfLocationResponse",
+        "type": "object"
+      },
+      "ReleaseInfo": {
+        "additionalProperties": false,
+        "properties": {
+          "data_version": {
+            "title": "Data Version",
+            "type": "string"
+          },
+          "embedding_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Embedding Model"
+          },
+          "index_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Index Version"
+          },
+          "released_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Released At"
+          }
+        },
+        "required": [
+          "data_version"
+        ],
+        "title": "ReleaseInfo",
+        "type": "object"
+      },
+      "ReleaseMetadataResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "const": "v1",
+            "default": "v1",
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "release": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReleaseInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "release"
+        ],
+        "title": "ReleaseMetadataResponse",
+        "type": "object"
+      },
+      "ResultGroup": {
+        "additionalProperties": false,
+        "properties": {
+          "confidence": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidence"
+          },
+          "date_end": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date End"
+          },
+          "date_precision": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DatePrecision"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "date_start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date Start"
+          },
+          "evidence_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "group_id": {
+            "title": "Group Id",
+            "type": "string"
+          },
+          "group_type": {
+            "title": "Group Type",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          }
+        },
+        "required": [
+          "group_id",
+          "label",
+          "group_type"
+        ],
+        "title": "ResultGroup",
+        "type": "object"
+      },
+      "ScopeNode": {
+        "additionalProperties": false,
+        "properties": {
+          "children": {
+            "items": {
+              "$ref": "#/components/schemas/ScopeNode"
+            },
+            "title": "Children",
+            "type": "array"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "node_id": {
+            "title": "Node Id",
+            "type": "string"
+          },
+          "node_type": {
+            "enum": [
+              "corpus",
+              "edition",
+              "volume",
+              "work",
+              "author"
+            ],
+            "title": "Node Type",
+            "type": "string"
+          },
+          "release_status": {
+            "title": "Release Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "node_id",
+          "node_type",
+          "label",
+          "release_status"
+        ],
+        "title": "ScopeNode",
+        "type": "object"
+      },
+      "ScopeTreeResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "corpus_id": {
+            "title": "Corpus Id",
+            "type": "string"
+          },
+          "data_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Version"
+          },
+          "roots": {
+            "items": {
+              "$ref": "#/components/schemas/ScopeNode"
+            },
+            "title": "Roots",
+            "type": "array"
+          }
+        },
+        "required": [
+          "corpus_id"
+        ],
+        "title": "ScopeTreeResponse",
+        "type": "object"
+      },
+      "SearchMode": {
+        "enum": [
+          "exact",
+          "claim",
+          "timeline",
+          "thematic"
+        ],
+        "title": "SearchMode",
+        "type": "string"
+      },
+      "SearchOptions": {
+        "additionalProperties": false,
+        "properties": {
+          "include_counter_evidence": {
+            "default": true,
+            "title": "Include Counter Evidence",
+            "type": "boolean"
+          },
+          "include_generated_summaries": {
+            "default": true,
+            "title": "Include Generated Summaries",
+            "type": "boolean"
+          }
+        },
+        "title": "SearchOptions",
+        "type": "object"
+      },
+      "SearchOverview": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence_count": {
+            "minimum": 0.0,
+            "title": "Evidence Count",
+            "type": "integer"
+          },
+          "result_note": {
+            "default": "以下组织只基于列出的证据。",
+            "title": "Result Note",
+            "type": "string"
+          },
+          "volume_count": {
+            "minimum": 0.0,
+            "title": "Volume Count",
+            "type": "integer"
+          },
+          "work_count": {
+            "minimum": 0.0,
+            "title": "Work Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "evidence_count",
+          "work_count",
+          "volume_count"
+        ],
+        "title": "SearchOverview",
+        "type": "object"
+      },
+      "SearchRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "anyOf": [
+              {
+                "maxLength": 2048,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cursor"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/SearchMode"
+          },
+          "options": {
+            "$ref": "#/components/schemas/SearchOptions"
+          },
+          "page_size": {
+            "default": 20,
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "query": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Query",
+            "type": "string"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/SearchScope"
+          },
+          "sort": {
+            "anyOf": [
+              {
+                "enum": [
+                  "relevance",
+                  "document_order"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sort"
+          }
+        },
+        "required": [
+          "query",
+          "mode",
+          "scope"
+        ],
+        "title": "SearchRequest",
+        "type": "object"
+      },
+      "SearchResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "classification_notice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Classification Notice"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/Evidence"
+            },
+            "title": "Evidence",
+            "type": "array"
+          },
+          "groups": {
+            "items": {
+              "$ref": "#/components/schemas/ResultGroup"
+            },
+            "title": "Groups",
+            "type": "array"
+          },
+          "insufficiency": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Insufficiency"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "mode": {
+            "$ref": "#/components/schemas/SearchMode"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "overview": {
+            "$ref": "#/components/schemas/SearchOverview"
+          },
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "release": {
+            "$ref": "#/components/schemas/ReleaseInfo"
+          },
+          "request_id": {
+            "title": "Request Id",
+            "type": "string"
+          },
+          "scope_snapshot": {
+            "$ref": "#/components/schemas/SearchScope"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/Warning"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "request_id",
+          "mode",
+          "query",
+          "scope_snapshot",
+          "release",
+          "overview"
+        ],
+        "title": "SearchResponse",
+        "type": "object"
+      },
+      "SearchScope": {
+        "additionalProperties": false,
+        "properties": {
+          "authors": {
+            "items": {
+              "$ref": "#/components/schemas/AuthorCode"
+            },
+            "title": "Authors",
+            "type": "array"
+          },
+          "content_types": {
+            "items": {
+              "$ref": "#/components/schemas/ContentType"
+            },
+            "title": "Content Types",
+            "type": "array"
+          },
+          "corpus_ids": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Corpus Ids",
+            "type": "array"
+          },
+          "edition_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Edition Ids",
+            "type": "array"
+          },
+          "volume_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Volume Ids",
+            "type": "array"
+          },
+          "work_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Work Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "corpus_ids"
+        ],
+        "title": "SearchScope",
+        "type": "object"
+      },
+      "SupportLabel": {
+        "enum": [
+          "direct",
+          "indirect",
+          "counter",
+          "context_only",
+          "irrelevant"
+        ],
+        "title": "SupportLabel",
+        "type": "string"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "Warning": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "stage": {
+            "title": "Stage",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "stage"
+        ],
+        "title": "Warning",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "Marx–Engels InsightMatch API",
+    "version": "1.0.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/corpora": {
+      "get": {
+        "operationId": "list_corpora",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CorporaResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Corpora",
+        "tags": [
+          "metadata"
+        ]
+      }
+    },
+    "/api/v1/corpora/{corpus_id}/scope-tree": {
+      "get": {
+        "operationId": "get_corpus_scope_tree",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "corpus_id",
+            "required": true,
+            "schema": {
+              "title": "Corpus Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScopeTreeResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Scope Tree",
+        "tags": [
+          "metadata"
+        ]
+      }
+    },
+    "/api/v1/evidence/{evidence_id}": {
+      "get": {
+        "operationId": "get_evidence",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "evidence_id",
+            "required": true,
+            "schema": {
+              "title": "Evidence Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Evidence"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Evidence",
+        "tags": [
+          "evidence"
+        ]
+      }
+    },
+    "/api/v1/evidence/{evidence_id}/context": {
+      "get": {
+        "operationId": "get_evidence_context",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "evidence_id",
+            "required": true,
+            "schema": {
+              "title": "Evidence Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "maximum": 3,
+              "minimum": 0,
+              "title": "Before",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "maximum": 3,
+              "minimum": 0,
+              "title": "After",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContextResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Context",
+        "tags": [
+          "evidence"
+        ]
+      }
+    },
+    "/api/v1/evidence/{evidence_id}/pdf-location": {
+      "get": {
+        "operationId": "get_evidence_pdf_location",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "evidence_id",
+            "required": true,
+            "schema": {
+              "title": "Evidence Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PdfLocationResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Pdf Location",
+        "tags": [
+          "evidence"
+        ]
+      }
+    },
+    "/api/v1/feedback": {
+      "post": {
+        "operationId": "submit_feedback",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedbackResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Implemented"
+          }
+        },
+        "summary": "Submit Feedback",
+        "tags": [
+          "feedback"
+        ]
+      }
+    },
+    "/api/v1/health/live": {
+      "get": {
+        "operationId": "health_live",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Live",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/v1/health/ready": {
+      "get": {
+        "operationId": "health_ready",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Ready",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/v1/meta/release": {
+      "get": {
+        "operationId": "get_release_metadata",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReleaseMetadataResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Release Metadata",
+        "tags": [
+          "metadata"
+        ]
+      }
+    },
+    "/api/v1/query-mode/suggest": {
+      "post": {
+        "operationId": "suggest_query_mode",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModeSuggestionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModeSuggestionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Query Mode",
+        "tags": [
+          "search"
+        ]
+      }
+    },
+    "/api/v1/search": {
+      "post": {
+        "operationId": "search",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Implemented"
+          }
+        },
+        "summary": "Search",
+        "tags": [
+          "search"
+        ]
+      }
+    }
+  }
+}

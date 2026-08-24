@@ -1,0 +1,166 @@
+{
+  "$defs": {
+    "SupportLabel": {
+      "enum": [
+        "direct",
+        "indirect",
+        "counter",
+        "context_only",
+        "irrelevant"
+      ],
+      "title": "SupportLabel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Internal retrieval object; it intentionally contains no formal quotation.",
+  "properties": {
+    "channels": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Channels",
+      "type": "array"
+    },
+    "evidence_id": {
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "exact_match_count": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Exact Match Count"
+    },
+    "exclusion_reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Exclusion Reasons",
+      "type": "array"
+    },
+    "fusion_score": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Fusion Score"
+    },
+    "lexical_rank": {
+      "anyOf": [
+        {
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Lexical Rank"
+    },
+    "lexical_score": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Lexical Score"
+    },
+    "rank_reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Rank Reasons",
+      "type": "array"
+    },
+    "rerank_score": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rerank Score"
+    },
+    "retrieval_unit_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Retrieval Unit Ids",
+      "type": "array"
+    },
+    "support_label": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SupportLabel"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "text_hash": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Text Hash"
+    },
+    "vector_rank": {
+      "anyOf": [
+        {
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Vector Rank"
+    },
+    "vector_score": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Vector Score"
+    }
+  },
+  "required": [
+    "evidence_id"
+  ],
+  "title": "Candidate",
+  "type": "object"
+}

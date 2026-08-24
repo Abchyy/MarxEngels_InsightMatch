@@ -1,0 +1,21 @@
+config_version: pipeline_v1
+retrieval:
+  lexical_top_k: 100
+  vector_top_k: 100
+  fusion_top_k: 80
+  rerank_top_k: 50
+  final_top_k: 20
+  rrf_k: 60
+  exact:
+    authoritative_operator: instr
+    trigram_acceleration_enabled: false
+  thematic:
+    min_cluster_input: 4
+    min_clusters: 2
+    max_clusters: 8
+    linkage: average
+timeouts_ms:
+  total: 15000
+  vector: 3000
+  reranker: 5000
+  llm: 8000
