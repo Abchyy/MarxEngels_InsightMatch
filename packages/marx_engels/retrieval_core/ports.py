@@ -1,9 +1,10 @@
 """Ports that keep pipelines independent of storage implementations."""
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from typing import Protocol
 
-from marx_engels.contracts import Candidate, Evidence, SearchRequest, SearchResponse, SearchScope
+from marx_engels.contracts import Candidate, SearchRequest, SearchResponse, SearchScope
+from marx_engels.retrieval_core.records import AuthoritativeEvidenceRecord
 
 
 class ScopeResolver(Protocol):
@@ -26,10 +27,16 @@ class VectorIndex(Protocol):
     ) -> list[Candidate]: ...
 
 
-class EvidenceHydrator(Protocol):
-    async def hydrate(
-        self, candidates: Sequence[Candidate], scope: SearchScope
-    ) -> list[Evidence]: ...
+class EvidenceRepository(Protocol):
+    """Batch reader for SQLite-authoritative passage records.
+
+    Implementations must not return public Evidence and must not read or
+    return LanceDB ``search_text``. Missing IDs are omitted from the mapping.
+    """
+
+    async def get_by_ids(
+        self, evidence_ids: Sequence[str]
+    ) -> Mapping[str, AuthoritativeEvidenceRecord]: ...
 
 
 class SearchPipeline(Protocol):
