@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 import sqlite3
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from pathlib import Path
 
 MIGRATION_PATTERN = re.compile(r"^(?P<version>\d+)_(?P<name>[a-z0-9_]+)\.sql$")
@@ -24,6 +24,19 @@ class SQLiteDatabase:
         connection.execute("PRAGMA journal_mode = WAL")
         connection.execute(f"PRAGMA busy_timeout = {int(self.busy_timeout_ms)}")
         return connection
+
+    def run_exclusive[T](self, operation: Callable[[sqlite3.Connection], T]) -> T:
+        """Create, use, and close a connection on the calling thread.
+
+        Blocking SQLite work must be scheduled with ``asyncio.to_thread`` so the
+        event loop never owns connect, query, fetch, or close.
+        """
+
+        connection = self.connect()
+        try:
+            return operation(connection)
+        finally:
+            connection.close()
 
     def migrate(self, migrations_dir: Path) -> list[int]:
         migrations = list(_discover_migrations(migrations_dir))

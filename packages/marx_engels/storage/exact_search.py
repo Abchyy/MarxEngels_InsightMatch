@@ -34,8 +34,33 @@ FROM (
     JOIN work AS w ON w.work_id = s.work_id
     JOIN volume AS v ON v.volume_id = w.volume_id
     JOIN edition AS e ON e.edition_id = v.edition_id
+    JOIN corpus AS c ON c.corpus_id = e.corpus_id
     WHERE p.verification_status = 'verified'
       AND p.release_status = 'published'
+      AND s.verification_status = 'verified'
+      AND w.verification_status = 'verified'
+      AND w.release_status = 'published'
+      AND v.release_status = 'published'
+      AND e.release_status = 'published'
+      AND c.release_status = 'published'
+      AND EXISTS (
+          SELECT 1
+          FROM passage_page AS pp
+          JOIN page_map AS pm ON pm.page_id = pp.page_id
+          WHERE pp.evidence_id = p.evidence_id
+      )
+      AND NOT EXISTS (
+          SELECT 1
+          FROM passage_page AS pp
+          JOIN page_map AS pm ON pm.page_id = pp.page_id
+          WHERE pp.evidence_id = p.evidence_id
+            AND (
+                pm.mapping_status != 'verified'
+                OR pm.pdf_page < 1
+                OR pm.printed_page_label IS NULL
+                OR length(trim(pm.printed_page_label)) = 0
+            )
+      )
       AND instr(p.verified_text, :query) > 0
 """
 

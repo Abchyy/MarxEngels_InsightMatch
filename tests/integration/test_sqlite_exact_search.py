@@ -149,7 +149,7 @@ def _ids(candidates: list[Candidate]) -> list[str]:
     return [candidate.evidence_id for candidate in candidates]
 
 
-def _insert_seed(connection: sqlite3.Connection, seed: PassageSeed) -> None:
+def _insert_seed(connection: sqlite3.Connection, seed: PassageSeed, *, pdf_page: int) -> None:
     connection.execute(
         """
         INSERT OR IGNORE INTO corpus(
@@ -222,6 +222,23 @@ def _insert_seed(connection: sqlite3.Connection, seed: PassageSeed) -> None:
             NOW,
         ),
     )
+    page_id = f"page_{seed.evidence_id}"
+    connection.execute(
+        """
+        INSERT INTO page_map(
+            page_id, volume_id, pdf_page, printed_page_label, printed_page_number,
+            page_type, mapping_status
+        ) VALUES (?, ?, ?, ?, ?, 'main', 'verified')
+        """,
+        (page_id, seed.volume_id, pdf_page, str(pdf_page), pdf_page),
+    )
+    connection.execute(
+        """
+        INSERT INTO passage_page(evidence_id, page_id, order_no)
+        VALUES (?, ?, 1)
+        """,
+        (seed.evidence_id, page_id),
+    )
 
 
 @pytest.fixture
@@ -229,8 +246,10 @@ def exact_index(tmp_path: Path) -> tuple[SQLiteExactSearchIndex, SQLiteDatabase]
     database = SQLiteDatabase(tmp_path / "corpus.db")
     database.migrate(ROOT / "migrations")
     with database.connect() as connection:
+        pages_by_volume: dict[str, int] = {}
         for seed in SEEDS:
-            _insert_seed(connection, seed)
+            pages_by_volume[seed.volume_id] = pages_by_volume.get(seed.volume_id, 0) + 1
+            _insert_seed(connection, seed, pdf_page=pages_by_volume[seed.volume_id])
     return SQLiteExactSearchIndex(database), database
 
 
@@ -416,3 +435,52 @@ def test_sqlite_work_runs_on_one_worker_not_the_event_loop(
     worker_ids = {observed[key] for key in ("connect", "execute", "fetchall", "close")}
     assert len(worker_ids) == 1
     assert loop_ident not in worker_ids
+
+
+def test_multipage_passage_is_not_duplicated(
+    exact_index: tuple[SQLiteExactSearchIndex, SQLiteDatabase],
+) -> None:
+    index, database = exact_index
+    with database.connect() as connection:
+        connection.execute(
+            """
+            INSERT INTO page_map(
+                page_id, volume_id, pdf_page, printed_page_label, printed_page_number,
+                page_type, mapping_status
+            ) VALUES ('page_p_sort_b_extra', 'volume_a1', 90, '90', 90, 'main', 'verified')
+            """
+        )
+        connection.execute(
+            """
+            INSERT INTO passage_page(evidence_id, page_id, order_no)
+            VALUES ('p_sort_b', 'page_p_sort_b_extra', 2)
+            """
+        )
+    ids = _ids(_search(index, QUERY_PERSON, _scope(work_ids=["work_marx"])))
+    assert ids.count("p_sort_b") == 1
+    assert ids == ["p_sort_b", "p_sort_g"]
+
+
+def test_page_size_skips_unpublished_work_before_limit(
+    exact_index: tuple[SQLiteExactSearchIndex, SQLiteDatabase],
+) -> None:
+    index, database = exact_index
+    with database.connect() as connection:
+        connection.execute(
+            "UPDATE work SET release_status = 'draft' WHERE work_id = 'work_marx_v2'"
+        )
+    assert _ids(_search(index, QUERY_PERSON, _scope(), limit=1)) == ["p_sort_b"]
+    assert "p_sort_a" not in _ids(_search(index, QUERY_PERSON, _scope()))
+    assert "p_sort_c" not in _ids(_search(index, QUERY_PERSON, _scope()))
+
+
+def test_invalid_page_mapping_is_excluded_before_limit(
+    exact_index: tuple[SQLiteExactSearchIndex, SQLiteDatabase],
+) -> None:
+    index, database = exact_index
+    with database.connect() as connection:
+        connection.execute(
+            "UPDATE page_map SET mapping_status = 'candidate' WHERE page_id = 'page_p_sort_a'"
+        )
+    assert _ids(_search(index, QUERY_PERSON, _scope(), limit=1)) == ["p_sort_c"]
+    assert "p_sort_a" not in _ids(_search(index, QUERY_PERSON, _scope()))

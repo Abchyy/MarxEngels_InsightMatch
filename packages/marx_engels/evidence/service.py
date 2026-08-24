@@ -44,6 +44,7 @@ class EvidenceGateExclusion:
 class EvidenceHydrationResult:
     evidence: tuple[Evidence, ...]
     exclusions: tuple[EvidenceGateExclusion, ...]
+    accepted_records: tuple[AuthoritativeEvidenceRecord, ...] = ()
 
 
 class EvidenceService:
@@ -67,6 +68,7 @@ class EvidenceService:
         )
 
         evidence: list[Evidence] = []
+        accepted_records: list[AuthoritativeEvidenceRecord] = []
         exclusions: list[EvidenceGateExclusion] = []
         for candidate in ordered:
             reason = _first_gate_failure(
@@ -77,10 +79,14 @@ class EvidenceService:
                     EvidenceGateExclusion(evidence_id=candidate.evidence_id, reason=reason)
                 )
                 continue
-            evidence.append(
-                _to_public_evidence(candidate, records[candidate.evidence_id], exact_query)
-            )
-        return EvidenceHydrationResult(evidence=tuple(evidence), exclusions=tuple(exclusions))
+            record = records[candidate.evidence_id]
+            evidence.append(_to_public_evidence(candidate, record, exact_query))
+            accepted_records.append(record)
+        return EvidenceHydrationResult(
+            evidence=tuple(evidence),
+            exclusions=tuple(exclusions),
+            accepted_records=tuple(accepted_records),
+        )
 
 
 def _unique_candidates(candidates: Sequence[Candidate]) -> list[Candidate]:
