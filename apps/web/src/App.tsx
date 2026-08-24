@@ -1,9 +1,12 @@
 import type { FormEvent } from "react";
+import { useMemo, useState } from "react";
 import { search, suggestMode } from "./api/client";
 import { MODE_LABELS, ModeSelector } from "./components/ModeSelector";
 import type { SearchMode, SearchRequest, SearchScope } from "./contracts";
 import type { QueryMachineDeps } from "./query/queryMachine";
 import { useQueryMachine } from "./query/useQueryMachine";
+import { ResultPage } from "./views/ResultPage";
+import type { ExactSort } from "./views/ExactResultList";
 import "./styles.css";
 
 const DEFAULT_SCOPE: SearchScope = {
@@ -15,21 +18,6 @@ const DEFAULT_SCOPE: SearchScope = {
   content_types: ["main_text", "author_note"],
 };
 
-const MACHINE_DEPS: QueryMachineDeps = {
-  suggestMode: (query, signal) => suggestMode(query, signal),
-  search: (request, signal) => search(request, signal),
-  // query 逐字透传，不做任何改写；mode 只能来自用户的最终选择。
-  buildRequest: (query, mode): SearchRequest => ({
-    query,
-    mode,
-    scope: { ...DEFAULT_SCOPE },
-    sort: null,
-    cursor: null,
-    page_size: 20,
-    options: { include_generated_summaries: true, include_counter_evidence: true },
-  }),
-};
-
 function isTimelineThematicChoice(allowedModes: readonly SearchMode[]): boolean {
   return (
     allowedModes.length === 2 &&
@@ -39,7 +27,26 @@ function isTimelineThematicChoice(allowedModes: readonly SearchMode[]): boolean 
 }
 
 export default function App() {
-  const { state, machine } = useQueryMachine(MACHINE_DEPS);
+  const [exactSort, setExactSort] = useState<ExactSort | null>(null);
+
+  const machineDeps = useMemo<QueryMachineDeps>(
+    () => ({
+      suggestMode: (query, signal) => suggestMode(query, signal),
+      search: (request, signal) => search(request, signal),
+      buildRequest: (query, mode): SearchRequest => ({
+        query,
+        mode,
+        scope: { ...DEFAULT_SCOPE },
+        sort: mode === "exact" ? exactSort : null,
+        cursor: null,
+        page_size: 20,
+        options: { include_generated_summaries: true, include_counter_evidence: true },
+      }),
+    }),
+    [exactSort],
+  );
+
+  const { state, machine } = useQueryMachine(machineDeps);
 
   const busy = state.phase === "suggesting_mode" || state.phase === "searching";
   const awaiting = state.phase === "awaiting_mode_selection";
@@ -57,6 +64,10 @@ export default function App() {
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
     void machine.submit();
+  }
+
+  function handleSuggestModeSwitch(mode: SearchMode) {
+    machine.selectMode(mode);
   }
 
   return (
@@ -140,61 +151,15 @@ export default function App() {
           </div>
         )}
         {result && (
-          <div>
-            <h3>
-              {result.phase === "success" && "检索结果概览"}
-              {result.phase === "empty" && "未找到结果"}
-              {result.phase === "partial" && "部分结果（存在降级或提示）"}
-            </h3>
-            <dl className="overview">
-              <dt>原查询</dt>
-              <dd>{result.response.query}</dd>
-              <dt>检索模式</dt>
-              <dd>{MODE_LABELS[result.selectedMode]}</dd>
-              <dt>实际范围</dt>
-              <dd>
-                语料 {result.response.scope_snapshot.corpus_ids.join("、") || "（空）"}；卷次{" "}
-                {result.response.scope_snapshot.volume_ids?.length
-                  ? result.response.scope_snapshot.volume_ids.join("、")
-                  : "全部已发布卷"}
-              </dd>
-              <dt>证据 / 著作 / 卷次</dt>
-              <dd>
-                {result.response.overview.evidence_count} / {result.response.overview.work_count} /{" "}
-                {result.response.overview.volume_count}
-              </dd>
-              <dt>数据版本</dt>
-              <dd>
-                {result.response.release.data_version}
-                {result.response.release.index_version
-                  ? `（索引 ${result.response.release.index_version}）`
-                  : ""}
-              </dd>
-            </dl>
-            {result.phase === "empty" && (
-              <p>
-                {result.selectedMode === "exact"
-                  ? "在当前范围内未发现该词的逐字命中，可改用语义检索重试。"
-                  : "在当前范围内未发现相关证据，可扩大范围或修改查询后重试。"}
-              </p>
-            )}
-            {result.phase === "partial" && (
-              <div className="warnings">
-                {result.response.insufficiency && (
-                  <p>证据不足：{result.response.insufficiency.message}</p>
-                )}
-                {(result.response.warnings ?? []).map((warning) => (
-                  <p key={`${warning.stage}:${warning.code}`}>
-                    警告[{warning.stage}/{warning.code}]：{warning.message}
-                  </p>
-                ))}
-              </div>
-            )}
-            <p className="notice">{result.response.overview.result_note}</p>
-            <p className="notice">
-              四种结果视图（精确列表 / 观点分组 / 时间轴 / 主题组）将在后续批次实现，本批次仅展示概览。
-            </p>
-          </div>
+          <ResultPage
+            response={result.response}
+            selectedMode={result.selectedMode}
+            phase={result.phase}
+            matchQuery={result.response.query.trim()}
+            exactSort={exactSort}
+            onExactSortChange={setExactSort}
+            onSuggestModeSwitch={handleSuggestModeSwitch}
+          />
         )}
       </section>
     </main>
