@@ -45,7 +45,14 @@ button:disabled { cursor: not-allowed; opacity: 0.55; }
 .mode-selector { margin-top: 24px; border: 0; padding: 0; display: grid; gap: 10px; }
 .mode-selector label { display: flex; gap: 10px; padding: 12px; border: 1px solid #ded7c8; border-radius: 10px; }
 .mode-selector label.selected { border-color: #214d38; background: #eef4ef; }
+.mode-selector label.disabled { opacity: 0.5; cursor: not-allowed; }
 .mode-selector span { display: grid; gap: 2px; }
 .mode-selector small { color: #5b625d; }
+.hint { color: #76571d; font-weight: 600; }
 .status { margin-top: 20px; }
 .notice { color: #76571d; font-size: 0.9rem; }
+.error-meta { color: #8c3b2e; font-size: 0.9rem; }
+.overview { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; }
+.overview dt { font-weight: 700; }
+.overview dd { margin: 0; }
+.warnings { border-left: 4px solid #b98a2f; padding-left: 12px; }
