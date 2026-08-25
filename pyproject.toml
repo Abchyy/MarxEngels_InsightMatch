@@ -10,9 +10,11 @@ readme = "README.md"
 requires-python = ">=3.12,<3.14"
 dependencies = [
   "fastapi>=0.116,<1",
+  "httpx>=0.28,<1",
   "lancedb>=0.25,<1",
   "pydantic>=2.11,<3",
   "pydantic-settings>=2.10,<3",
+  "pypdf>=5.4,<7",
   "pyyaml>=6,<7",
   "uvicorn[standard]>=0.35,<1",
 ]
@@ -37,7 +39,7 @@ src = ["packages", "apps/api", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
-allowed-confusables = ["–", "。", "，", "？"]
+allowed-confusables = ["–", "。", "，", "？", "！", "（", "）", "．", "、", "；"]
 
 [tool.mypy]
 python_version = "3.12"
@@ -47,13 +49,13 @@ mypy_path = "packages"
 plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]
-module = ["pyarrow", "pyarrow.*"]
+module = ["pyarrow", "pyarrow.*", "pypdf", "pypdf.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 addopts = "-q --strict-config --strict-markers"
 testpaths = ["tests"]
-pythonpath = ["packages"]
+pythonpath = ["packages", "."]
 markers = [
   "contract: public contract and adapter conformance tests",
   "integration: tests using temporary infrastructure",

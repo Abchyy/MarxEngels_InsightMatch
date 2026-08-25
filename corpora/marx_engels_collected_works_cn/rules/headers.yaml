@@ -1,0 +1,7 @@
+schema_version: 1
+header_patterns:
+  - "^马克思恩格斯文集$"
+  - "^第[一二三四五六七八九十]+卷.*$"
+  - "^第一卷说明$"
+footer_patterns: []
+page_number_pattern: "^(?:第)?(?:[ivxlcdmIVXLCDM]+|\\d+)(?:页)?$"

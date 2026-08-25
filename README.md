@@ -75,6 +75,22 @@ make verify-contracts
 make verify
 ```
 
+Corpus ingestion (read-only `PDF_ASSET_ROOT`, derived data in `CORPUS_DATA_ROOT`):
+
+```bash
+uv run python -m marx_engels.ingestion.cli inventory
+uv run python -m marx_engels.ingestion.cli preflight
+uv run python -m marx_engels.ingestion.cli extract --pilot
+uv run python -m marx_engels.ingestion.cli extract --all
+uv run python -m marx_engels.ingestion.cli resume
+uv run python -m marx_engels.ingestion.cli status
+uv run python -m marx_engels.ingestion.cli assemble
+uv run python -m marx_engels.ingestion.cli ingest-sqlite --replace
+make verify-corpus
+```
+
+`MINERU_API_TOKEN` stays in local `.env` and must never be printed or committed. MinerU Markdown is Raw extraction, not a verified quotation.
+
 Commands must not access production implicitly. Corpus PDFs, runtime SQLite databases, LanceDB data and model credentials are intentionally excluded from Git.
 
 ## Planned worktree ownership
