@@ -1,4 +1,4 @@
-.PHONY: setup lint typecheck test test-unit test-contract test-integration test-regression migrate verify-corpus build-index verify-index run-api run-web export-openapi freeze-contracts verify-contracts verify clean
+.PHONY: setup lint typecheck test test-unit test-contract test-integration test-regression migrate verify-corpus build-index verify-index run-api run-web run-demo-api run-demo-web export-openapi freeze-contracts verify-contracts verify clean
 
 setup:
 	uv sync --all-groups
@@ -45,6 +45,12 @@ run-api:
 
 run-web:
 	pnpm dev
+
+run-demo-api:
+	uv run python scripts/run_synthetic_demo.py
+
+run-demo-web:
+	VITE_DEMO_MODE=true pnpm dev
 
 export-openapi:
 	uv run python scripts/export_openapi.py --output contracts/openapi.v1.json

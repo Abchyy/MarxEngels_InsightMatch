@@ -13,6 +13,9 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from fastapi import FastAPI
+
+from marx_engels.api.app import create_app
 from marx_engels.api.container import ApplicationContainer
 from marx_engels.contracts import (
     Candidate,
@@ -41,7 +44,7 @@ from marx_engels.storage import (
     SQLiteReleaseResolver,
     SQLiteScopeResolver,
 )
-from tests.synthetic_corpus.builder import FIXTURE_ROOT
+from tests.synthetic_corpus.builder import FIXTURE_ROOT, build_synthetic_corpus
 
 SYNTHETIC_TEXT_MARK = "【合成数据，非原典】"
 FORBIDDEN_EVIDENCE_IDS = frozenset(
@@ -436,3 +439,17 @@ def build_four_mode_test_container(
         }
     )
     return ApplicationContainer(settings=resolved, pipelines=pipelines, sqlite=sqlite)
+
+
+def create_synthetic_demo_app(database_path: Path) -> FastAPI:
+    """Explicit demo ASGI app. Never used by the default production container."""
+
+    build = build_synthetic_corpus(database_path)
+    settings = Settings(
+        sqlite_database_path=build.database.path,
+        active_data_version="data_synthetic_v1",
+        active_index_version="idx_synthetic_v1",
+        app_env="test",
+    )
+    container = build_four_mode_test_container(build.database.path, settings=settings)
+    return create_app(settings=settings, container=container)

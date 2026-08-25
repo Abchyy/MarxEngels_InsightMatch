@@ -2,21 +2,19 @@ import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import { search, suggestMode } from "./api/client";
 import { MODE_LABELS, ModeSelector } from "./components/ModeSelector";
-import type { SearchMode, SearchRequest, SearchScope } from "./contracts";
+import type { SearchMode, SearchRequest } from "./contracts";
+import {
+  SYNTHETIC_DEMO_BANNER,
+  SYNTHETIC_DEMO_EXAMPLES,
+  buildSearchRequest,
+  isSyntheticDemoMode,
+  type SyntheticDemoExample,
+} from "./demo/syntheticDemo";
 import type { QueryMachineDeps } from "./query/queryMachine";
 import { useQueryMachine } from "./query/useQueryMachine";
 import { ResultPage } from "./views/ResultPage";
 import type { ExactSort } from "./views/ExactResultList";
 import "./styles.css";
-
-const DEFAULT_SCOPE: SearchScope = {
-  corpus_ids: ["marx_engels_collected_works_cn"],
-  edition_ids: [],
-  volume_ids: [],
-  work_ids: [],
-  authors: [],
-  content_types: ["main_text", "author_note"],
-};
 
 function isTimelineThematicChoice(allowedModes: readonly SearchMode[]): boolean {
   return (
@@ -26,24 +24,17 @@ function isTimelineThematicChoice(allowedModes: readonly SearchMode[]): boolean 
   );
 }
 
-export default function App() {
+export function SearchApp({ demoMode }: { demoMode: boolean }) {
   const [exactSort, setExactSort] = useState<ExactSort | null>(null);
 
   const machineDeps = useMemo<QueryMachineDeps>(
     () => ({
       suggestMode: (query, signal) => suggestMode(query, signal),
       search: (request, signal) => search(request, signal),
-      buildRequest: (query, mode): SearchRequest => ({
-        query,
-        mode,
-        scope: { ...DEFAULT_SCOPE },
-        sort: mode === "exact" ? exactSort : null,
-        cursor: null,
-        page_size: 20,
-        options: { include_generated_summaries: true, include_counter_evidence: true },
-      }),
+      buildRequest: (query, mode): SearchRequest =>
+        buildSearchRequest(query, mode, exactSort, demoMode),
     }),
-    [exactSort],
+    [exactSort, demoMode],
   );
 
   const { state, machine } = useQueryMachine(machineDeps);
@@ -70,12 +61,26 @@ export default function App() {
     machine.selectMode(mode);
   }
 
+  function applyDemoExample(example: SyntheticDemoExample) {
+    machine.setQuery(example.query);
+    machine.selectMode(example.mode);
+  }
+
   return (
     <main>
       <header>
+        {demoMode && (
+          <p className="demo-banner" role="status">
+            {SYNTHETIC_DEMO_BANNER}
+          </p>
+        )}
         <p className="eyebrow">可核验的原典检索</p>
         <h1>马恩文本检索助手</h1>
-        <p>当前范围：《马克思恩格斯文集》十卷</p>
+        <p>
+          {demoMode
+            ? "当前范围：合成测试语料（禁止作为引文）"
+            : "当前范围：《马克思恩格斯文集》十卷"}
+        </p>
       </header>
 
       <form onSubmit={handleSubmit}>
@@ -88,6 +93,26 @@ export default function App() {
           rows={4}
           required
         />
+        {demoMode && (
+          <div className="demo-examples">
+            <p className="demo-examples__label">合成演示查询（点击填入，不改写检索状态机）</p>
+            <ul>
+              {SYNTHETIC_DEMO_EXAMPLES.map((example) => (
+                <li key={example.mode}>
+                  <button
+                    type="button"
+                    className="demo-example"
+                    onClick={() => applyDemoExample(example)}
+                    disabled={busy}
+                  >
+                    <span className="demo-example__mode">{example.label}</span>
+                    <span className="demo-example__query">{example.query}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         <div className="actions">
           <button
             type="button"
@@ -164,4 +189,8 @@ export default function App() {
       </section>
     </main>
   );
+}
+
+export default function App() {
+  return <SearchApp demoMode={isSyntheticDemoMode()} />;
 }

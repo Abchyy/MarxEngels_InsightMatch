@@ -70,6 +70,8 @@ make build-index
 make verify-index
 make run-api
 make run-web
+make run-demo-api
+make run-demo-web
 make export-openapi
 make verify-contracts
 make verify
@@ -104,6 +106,36 @@ git push
 ```
 
 Until then, `make verify` runs the same essential checks locally.
+
+## Synthetic browser demo
+
+This path is explicitly isolated from production, staging, and ordinary local
+runtime. It does not call the default `ApplicationContainer`, does not load
+production models, and does not present synthetic text as Marx–Engels source.
+
+Use two terminals:
+
+```bash
+make run-demo-api
+```
+
+```bash
+make run-demo-web
+```
+
+Then open `http://127.0.0.1:5173`. The page banner always reads
+「合成数据演示，不是马克思恩格斯原典」. Four existing synthetic queries can be
+clicked into the form:
+
+| Mode | Query |
+|---|---|
+| exact | 劳动 |
+| claim | 协作劳动会改变群体关系 |
+| timeline | 公共讨论如何变化 |
+| thematic | 生产关系与制度安排 |
+
+`make run-api` and `make run-web` are unchanged and still use the production
+composition root. Do not commit the temporary SQLite file created for the demo.
 
 ## Design documents
 
