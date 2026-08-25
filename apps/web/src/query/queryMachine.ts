@@ -99,10 +99,21 @@ export const ALL_MODES: readonly SearchMode[] = ["exact", "claim", "timeline", "
 
 /** 服务器警告或证据不足提示意味着结果不完整，对应 04 规范 §14 的 Partial 行。 */
 export function classifySearchResponse(response: SearchResponse): "success" | "empty" | "partial" {
-  if ((response.warnings?.length ?? 0) > 0 || response.insufficiency != null) return "partial";
+  const hasWarnings = (response.warnings?.length ?? 0) > 0;
+  const insufficiency = response.insufficiency;
   const evidenceCount = response.evidence?.length ?? response.overview.evidence_count;
   const groupCount = response.groups?.length ?? 0;
-  return evidenceCount === 0 && groupCount === 0 ? "empty" : "success";
+  const isEmptyResult = evidenceCount === 0 && groupCount === 0;
+
+  if (isEmptyResult) {
+    // Exact 无命中：NO_EXACT_MATCH 是正常 empty 语义，不是 partial
+    if (insufficiency?.code === "NO_EXACT_MATCH") return "empty";
+    if (insufficiency != null || hasWarnings) return "partial";
+    return "empty";
+  }
+
+  if (hasWarnings || insufficiency != null) return "partial";
+  return "success";
 }
 
 function isAbortError(error: unknown): boolean {

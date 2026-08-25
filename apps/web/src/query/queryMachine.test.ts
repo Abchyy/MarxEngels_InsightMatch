@@ -457,6 +457,17 @@ describe("响应与错误映射", () => {
     expect(state.phase).toBe("empty");
   });
 
+  it("Exact NO_EXACT_MATCH 零结果 → empty（非 partial）", async () => {
+    const state = await searchWith({
+      mode: "exact",
+      evidence: [],
+      groups: [],
+      insufficiency: { code: "NO_EXACT_MATCH", message: "【合成】无逐字命中" },
+      overview: { evidence_count: 0, work_count: 0, volume_count: 0, result_note: "以下组织只基于列出的证据。" },
+    });
+    expect(state.phase).toBe("empty");
+  });
+
   it("统一 ErrorResponse 进入 error 状态并保留 code/retryable", async () => {
     const { machine } = createHarness({
       search: () => Promise.reject(apiError("RATE_LIMITED", { retryable: true })),
