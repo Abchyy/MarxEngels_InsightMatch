@@ -1,0 +1,29 @@
+"""Limits, defaults, and text-layer heuristics for raw extraction."""
+
+from __future__ import annotations
+
+MINERU_MAX_BYTES = 200 * 1024 * 1024
+# English marketing docs mention 600 pages; the live precision API currently
+# rejects uploads above 200 pages, so derived chunks stay under that cap.
+MINERU_MAX_PAGES = 200
+SPLIT_MAX_BYTES = 180 * 1024 * 1024
+SPLIT_MAX_PAGES = 180
+PROVIDER_CONCURRENCY = 2
+TEXT_LAYER_MIN_CHARS = 40
+ADAPTER_NAME = "mineru"
+ADAPTER_VERSION = "1.0.0"
+DEFAULT_MODEL_VERSION = "vlm"
+DEFAULT_LANGUAGE = "ch"
+LAYER_RAW = "raw"
+PILOT_PAGE_COUNT = 10
+PILOT_START_PAGE = 21
+POLL_INTERVAL_SECONDS = 5.0
+PILOT_MAX_WAIT_SECONDS = 20 * 60
+ALL_MAX_WAIT_SECONDS = 3 * 60 * 60
+CHUNK_POLL_DEADLINE_SECONDS = 45 * 60
+HTTP_TIMEOUT_SECONDS = 60.0
+UPLOAD_TIMEOUT_SECONDS = 600.0
+DOWNLOAD_TIMEOUT_SECONDS = 300.0
+MAX_RETRIES = 5
+INITIAL_BACKOFF_SECONDS = 1.0
+MAX_BACKOFF_SECONDS = 32.0

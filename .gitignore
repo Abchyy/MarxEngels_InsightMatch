@@ -24,7 +24,10 @@ data/
 *.db
 *.db-shm
 *.db-wal
+!corpora/marx_engels_collected_works_cn/sqlite/corpus.db
 *.lance/
+*.pdf
+*.zip
 
 coverage/
 playwright-report/

@@ -1,0 +1,15 @@
+schema_version: 1
+corpus_id: marx_engels_collected_works_cn
+filename_template: 马克思恩格斯文集第{chinese_numeral}卷.pdf
+volume_count: 10
+chinese_numerals:
+  1: 一
+  2: 二
+  3: 三
+  4: 四
+  5: 五
+  6: 六
+  7: 七
+  8: 八
+  9: 九
+  10: 十

@@ -1,0 +1,27 @@
+schema_version: 1
+normalization_version: nfc-v1
+join_confidence_threshold: 0.6
+garbled_replacement_min: 2
+low_text_char_threshold: 8
+header_repeat_min_pages: 3
+retrieval_unit_char_limit: 1800
+poetry_max_line_chars: 16
+poetry_min_short_lines: 3
+sentence_terminators:
+  - 。
+  - ！
+  - ？
+  - ；
+  - …
+  - .
+  - "!"
+  - "?"
+list_prefixes:
+  - "^\\d+[.、．)]"
+  - "^[（(]\\d+[)）]"
+  - "^[①-⑳]"
+  - "^[-•·]"
+  - "^[一二三四五六七八九十]+[、．.]"
+paragraph_indent_prefixes:
+  - "^　"
+  - "^  "

@@ -1,6 +1,6 @@
 # Marx–Engels InsightMatch
 
-面向《马克思恩格斯文集》十卷的可核验原典检索助手。当前仓库是 V1 并行开发基准：模块边界、公共契约、数据库迁移、API 路由、前端壳、测试入口和 CI 已建立，真实语料与四条检索管线算法尚待各开发分支实现。
+面向《马克思恩格斯文集》十卷的可核验原典检索助手。当前仓库已具备模块边界、公共契约、数据库迁移、API、前端检索工作流、四条检索管线、离线语料处理管线，以及一份版本化的十卷 SQLite 数据资产。该数据库仍为 unverified/draft，尚未作为已核验正式引文发布。
 
 ## Architecture baseline
 
@@ -77,7 +77,38 @@ make verify-contracts
 make verify
 ```
 
-Commands must not access production implicitly. Corpus PDFs, runtime SQLite databases, LanceDB data and model credentials are intentionally excluded from Git.
+Corpus ingestion (read-only `PDF_ASSET_ROOT`, derived data in `CORPUS_DATA_ROOT`):
+
+```bash
+uv run python -m marx_engels.ingestion.cli inventory
+uv run python -m marx_engels.ingestion.cli preflight
+uv run python -m marx_engels.ingestion.cli extract --pilot
+uv run python -m marx_engels.ingestion.cli extract --all
+uv run python -m marx_engels.ingestion.cli resume
+uv run python -m marx_engels.ingestion.cli status
+uv run python -m marx_engels.ingestion.cli assemble
+uv run python -m marx_engels.ingestion.cli ingest-sqlite --replace
+make verify-corpus
+```
+
+`MINERU_API_TOKEN` stays in local `.env` and must never be printed or committed. MinerU Markdown is Raw extraction, not a verified quotation.
+
+Commands must not access production implicitly. Corpus PDFs, OCR/MinerU output, runtime SQLite databases, LanceDB data and model credentials remain excluded from Git, with one documented exception: `corpora/marx_engels_collected_works_cn/sqlite/corpus.db`.
+
+## Versioned SQLite data asset
+
+The unverified/draft ten-volume snapshot is versioned at:
+
+`corpora/marx_engels_collected_works_cn/sqlite/corpus.db`
+
+This is the only SQLite file allowed in Git. It is a local demo product asset, not a published verified release:
+
+- SQLite remains the sole authoritative source for text and metadata.
+- All passages in this snapshot remain `unverified` / `draft`.
+- Do not treat Clean text or FTS `search_text` as a formal quotation.
+- Do not commit other SQLite files, PDFs, OCR/MinerU output, LanceDB directories, secrets, or `runtime-data/`.
+
+See `corpora/marx_engels_collected_works_cn/README.md` and `docs/development/CORPUS_PIPELINE.md`.
 
 ## Planned worktree ownership
 

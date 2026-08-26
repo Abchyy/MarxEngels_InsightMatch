@@ -1,0 +1,31 @@
+schema_version: 1
+toc_heading_patterns:
+  - "^目\\s*录$"
+work_title_markers:
+  - "^《.+》"
+author_line_patterns:
+  - "^卡[·•.]?马克思"
+  - "^弗[·•.]?恩格斯"
+  - "^马克思和恩格斯"
+  - "^恩格斯$"
+  - "^马克思$"
+work_end_patterns:
+  - "^（完）$"
+  - "写于一[八九〇零○0-9]"
+  - "^选自《"
+editor_note_patterns:
+  - "编者注"
+  - "^第[一二三四五六七八九十]+卷说明"
+  - "^本卷"
+index_heading_patterns:
+  - "索引$"
+  - "^注释$"
+section_patterns:
+  - "^第[一二三四五六七八九十百千0-9]+[章节篇]"
+  - "^[一二三四五六七八九十]+[、．.]"
+  - "^\\d+[.、]"
+footnote_markers:
+  - "^[①-⑳]"
+  - "^\\(\\d+\\)"
+  - "^〔\\d+〕"
+  - "^\\d+\\)"
