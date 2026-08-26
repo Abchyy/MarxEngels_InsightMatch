@@ -1,6 +1,6 @@
 # Marx–Engels Collected Works corpus package
 
-This public directory contains only the manifest template and versioned processing rules. Do not commit the ten source PDFs, derived chunks, MinerU ZIP archives, Markdown, JSON extracts, or quality reports.
+This directory contains the manifest template, versioned processing rules, and the Unverified/Draft SQLite snapshot at `sqlite/corpus.db`. Do not commit the ten source PDFs, derived chunks, MinerU ZIP archives, Markdown, JSON extracts, or quality reports.
 
 ## Rules
 
