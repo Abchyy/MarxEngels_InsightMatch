@@ -82,6 +82,8 @@ class SQLiteDatabase:
             return False
 
     def integrity_check(self) -> str:
+        if not self.path.exists():
+            return "missing"
         with self.connect() as connection:
             row = connection.execute("PRAGMA integrity_check").fetchone()
             return str(row[0]) if row else "no result"

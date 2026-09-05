@@ -81,6 +81,12 @@ export function SearchApp({ demoMode }: { demoMode: boolean }) {
             ? "当前范围：合成测试语料（禁止作为引文）"
             : "当前范围：《马克思恩格斯文集》十卷"}
         </p>
+        {!demoMode && (
+          <p className="corpus-policy" role="note">
+            本地 Canonical SQLite 原文；source-derived trusted 本地发布，未经人工校勘。页码未经人工确认，本阶段不提供
+            PDF 跳转。
+          </p>
+        )}
       </header>
 
       <form onSubmit={handleSubmit}>
@@ -165,7 +171,9 @@ export function SearchApp({ demoMode }: { demoMode: boolean }) {
           <div role="alert">
             <p>
               {state.error.code === "PIPELINE_NOT_IMPLEMENTED"
-                ? "公共契约已经生效；该检索管线将在对应 Worktree 中实现。"
+                ? demoMode
+                  ? "公共契约已经生效；该检索管线将在对应 Worktree 中实现。"
+                  : "当前未接入该语义检索模式，系统不会改用合成数据。"
                 : state.error.message}
             </p>
             <p className="error-meta">

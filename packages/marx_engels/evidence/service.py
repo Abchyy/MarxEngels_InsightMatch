@@ -10,7 +10,6 @@ from marx_engels.retrieval_core import AuthoritativeEvidenceRecord, EvidenceRepo
 
 _VERIFIED = "verified"
 _PUBLISHED = "published"
-_PAGE_MAPPING_VERIFIED = "verified"
 
 
 class EvidenceExclusionReason(StrEnum):
@@ -123,8 +122,6 @@ def _first_gate_failure(
         return EvidenceExclusionReason.TEXT_HASH_MISMATCH
     if not _metadata_available(record):
         return EvidenceExclusionReason.METADATA_UNAVAILABLE
-    if not _pages_available(record):
-        return EvidenceExclusionReason.PAGES_UNAVAILABLE
     return _exact_gate_failure(candidate, record, exact_query)
 
 
@@ -153,20 +150,6 @@ def _is_vector_candidate(candidate: Candidate) -> bool:
         or candidate.vector_rank is not None
         or candidate.vector_score is not None
     )
-
-
-def _pages_available(record: AuthoritativeEvidenceRecord) -> bool:
-    printed = record.printed_pages
-    pdf_pages = record.pdf_pages
-    statuses = record.page_mapping_statuses
-    length = len(printed)
-    if length == 0 or length != len(pdf_pages) or length != len(statuses):
-        return False
-    if any(not page.strip() for page in printed):
-        return False
-    if any(page < 1 for page in pdf_pages):
-        return False
-    return all(status == _PAGE_MAPPING_VERIFIED for status in statuses)
 
 
 def _metadata_available(record: AuthoritativeEvidenceRecord) -> bool:
@@ -229,6 +212,7 @@ def _to_public_evidence(
     if _is_exact_candidate(candidate) and exact_query is not None:
         offsets = non_overlapping_match_offsets(record.verified_text, exact_query.query.strip())
         match_count = len(offsets)
+    # Page fields echo stored values and are not human-confirmed in this phase.
     return Evidence(
         evidence_id=record.evidence_id,
         verified_text=record.verified_text,

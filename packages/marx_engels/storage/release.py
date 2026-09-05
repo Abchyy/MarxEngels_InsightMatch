@@ -6,6 +6,7 @@ import asyncio
 import sqlite3
 
 from marx_engels.contracts import ReleaseInfo, SearchScope
+from marx_engels.corpus_registry.local_asset import load_release_sidecar
 from marx_engels.errors import DomainError
 from marx_engels.settings import Settings
 from marx_engels.storage.sqlite import SQLiteDatabase
@@ -24,11 +25,15 @@ class SQLiteReleaseResolver:
     async def resolve_exact(self, scope: SearchScope) -> ReleaseInfo:
         data_version = _configured_version(self._settings.active_data_version)
         if data_version is None:
-            raise DomainError(
-                "STORAGE_NOT_CONFIGURED",
-                "Active data version is not configured.",
-                details={"setting": "active_data_version"},
-            )
+            sidecar = load_release_sidecar(self._database.path)
+            if sidecar is None or not sidecar.init_complete:
+                raise DomainError(
+                    "STORAGE_NOT_CONFIGURED",
+                    "Active data version is not configured and local corpus init is incomplete. "
+                    "Run `make init-local-corpus` or set ACTIVE_DATA_VERSION.",
+                    details={"setting": "active_data_version"},
+                )
+            data_version = sidecar.data_version
         index_version = _configured_version(self._settings.active_index_version)
         return await asyncio.to_thread(
             _load_exact_release,

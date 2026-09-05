@@ -23,6 +23,9 @@ class PipelineNotImplementedError(DomainError):
     def __init__(self, mode: str) -> None:
         super().__init__(
             "PIPELINE_NOT_IMPLEMENTED",
-            f"The {mode} pipeline is defined but not implemented in the baseline.",
+            (
+                f"The {mode} pipeline is not available in this runtime. "
+                "Semantic retrieval is not connected and will not fall back to synthetic data."
+            ),
             details={"mode": mode},
         )

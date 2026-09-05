@@ -1,0 +1,15 @@
+schema_version: 1
+corpus_id: marx_engels_collected_works_cn
+edition_id: people_press_2009_cn
+data_version: data_2026_08_26_d6612c
+sqlite_filename: corpus.db
+sha256: 35a2d7a7a21376d98d05e1ac3ec3fef7f638897c735d8ac6ee30301986bf580d
+byte_size: 84865024
+volume_count: 10
+work_count: 152
+section_count: 1132
+passage_count: 17284
+trust_policy: source_derived_trusted
+human_reviewed: false
+quotation_policy: sqlite_canonical_text_only
+git_tracked: false

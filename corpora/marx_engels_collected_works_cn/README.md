@@ -1,6 +1,12 @@
 # Marx–Engels Collected Works corpus package
 
-This directory contains the manifest template, versioned processing rules, and the Unverified/Draft SQLite snapshot at `sqlite/corpus.db`. That database is the only SQLite file allowed in Git: a versioned local demo asset, not a published verified release. Do not commit the ten source PDFs, derived chunks, MinerU ZIP archives, Markdown, JSON extracts, quality reports, or any other SQLite file.
+This directory contains the manifest template, versioned processing rules, and the Git-ignored Canonical SQLite seed at `sqlite/corpus.db`. Git tracks `sqlite/local_asset.yaml` and `sqlite/corpus.sha256` only. Do not commit the ten source PDFs, derived chunks, MinerU ZIP archives, Markdown, JSON extracts, quality reports, runtime copies, cloud-export artifacts, or any SQLite file.
+
+## Local asset
+
+`sqlite/corpus.db` is a local data asset. Initialize a writable runtime copy with `make init-local-corpus`. The seed is read-only; source-derived trusted publication writes only the Git-ignored runtime database. That publication is not human review.
+
+Missing seed, SHA-256 mismatch, a non-empty `-wal` sidecar, or incomplete init fail closed. `corpus.sha256` covers `sqlite/corpus.db` only; read-only checks must not create `-wal` or `-shm`.
 
 ## Rules
 
@@ -16,7 +22,7 @@ This directory contains the manifest template, versioned processing rules, and t
   - `reports/publication/` local SQLite handoff reports
   - `state/` resumable pipeline state and ID registry
 - MinerU output is the Raw layer only. Clean structure is unverified/draft. Neither is a formal quotation.
-- `ingest-sqlite` writes a local Unverified/Draft snapshot for display and FTS search. It does not mark passages Verified or enqueue a published index.
+- `ingest-sqlite` writes a local Unverified/Draft snapshot. It does not mark passages as human-reviewed and must not overwrite the Canonical seed.
 
 ## Filename convention
 

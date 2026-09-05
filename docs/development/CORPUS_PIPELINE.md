@@ -29,12 +29,16 @@ uv run python -m marx_engels.ingestion.cli clean-pages
 uv run python -m marx_engels.ingestion.cli assemble
 uv run python -m marx_engels.ingestion.cli ingest-sqlite --replace
 make verify-corpus
+make init-local-corpus
+make export-cloud-ingest
 ```
 
 Split threshold is 180 MB or 180 pages, below the live MinerU precision-API limits of 200 MB / 200 pages. `assemble` writes versioned Raw pages / Clean pages / structure candidates and never marks passages Verified.
 
 `ingest-sqlite` writes the Clean snapshot into local SQLite as `unverified` / `draft` for display and FTS search. `passage_fts.search_text` is retrieval aid only, not a formal quotation. The command does not enqueue `index_outbox` or create a published data release.
 
-## Versioned SQLite snapshot
+## Local Canonical SQLite asset
 
-`corpora/marx_engels_collected_works_cn/sqlite/corpus.db` is the only SQLite file committed to Git. It is an unverified/draft local demo asset. Other SQLite files, PDFs, OCR, MinerU archives, LanceDB data, secrets, and `runtime-data/` remain excluded. Do not extend this exception.
+`corpora/marx_engels_collected_works_cn/sqlite/corpus.db` is a Git-ignored local seed. Tracked companions are `sqlite/local_asset.yaml` and `sqlite/corpus.sha256`. Copy it to a runtime database and apply source-derived trusted publication with `make init-local-corpus`. Do not write the seed. `corpus.sha256` binds the main SQLite file only: verify, init, and export open it as an immutable snapshot, reject a non-empty `-wal` sidecar, and must not create `-wal` or `-shm` in the seed directory. Other SQLite files, PDFs, OCR, MinerU archives, LanceDB data, secrets, cloud-export artifacts, and `runtime-data/` remain excluded.
+
+`make export-cloud-ingest` writes retrieval units for a later cloud knowledge-base upload. It does not upload and does not read API keys. Cloud `search_text` is not a quotation; restore wording from SQLite `evidence_id`.

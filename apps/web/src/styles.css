@@ -27,6 +27,12 @@ header { margin-bottom: 32px; }
   letter-spacing: 0.02em;
 }
 .eyebrow { color: #76571d; font-weight: 700; letter-spacing: 0.08em; }
+.corpus-policy {
+  margin: 12px 0 0;
+  color: #5b625d;
+  font-size: 0.95rem;
+  max-width: 42rem;
+}
 h1 { margin: 4px 0; font-family: Georgia, "Noto Serif SC", serif; font-size: clamp(2rem, 5vw, 4rem); }
 
 form, .status {

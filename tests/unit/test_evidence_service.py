@@ -181,7 +181,7 @@ def test_vector_hash_mismatch_is_excluded() -> None:
     assert exclusion_map(result) == {"ev_ok": EvidenceExclusionReason.TEXT_HASH_MISMATCH}
 
 
-def test_missing_pages_are_excluded() -> None:
+def test_missing_pages_are_allowed_in_this_phase() -> None:
     repository = FakeEvidenceRepository(
         {
             "ev_npage": make_record(
@@ -193,8 +193,10 @@ def test_missing_pages_are_excluded() -> None:
         }
     )
     result = hydrate(repository, [make_candidate("ev_npage")])
-    assert result.evidence == ()
-    assert exclusion_map(result) == {"ev_npage": EvidenceExclusionReason.PAGES_UNAVAILABLE}
+    assert [item.evidence_id for item in result.evidence] == ["ev_npage"]
+    assert result.evidence[0].printed_pages == []
+    assert result.evidence[0].pdf_pages == []
+    assert exclusion_map(result) == {}
 
 
 def test_model_unauthorized_id_is_excluded() -> None:
@@ -501,7 +503,7 @@ def test_missing_display_metadata_is_excluded() -> None:
     assert exclusion_map(result) == {"ev_ok": EvidenceExclusionReason.METADATA_UNAVAILABLE}
 
 
-def test_mixed_page_mapping_statuses_are_excluded() -> None:
+def test_unverified_page_mapping_is_not_an_evidence_gate() -> None:
     repository = FakeEvidenceRepository(
         {
             "ev_ok": make_record(
@@ -512,11 +514,12 @@ def test_mixed_page_mapping_statuses_are_excluded() -> None:
         }
     )
     result = hydrate(repository, [make_candidate()])
-    assert result.evidence == ()
-    assert exclusion_map(result) == {"ev_ok": EvidenceExclusionReason.PAGES_UNAVAILABLE}
+    assert [item.evidence_id for item in result.evidence] == ["ev_ok"]
+    assert result.evidence[0].printed_pages == ["123", "124"]
+    assert exclusion_map(result) == {}
 
 
-def test_mismatched_page_list_lengths_are_excluded() -> None:
+def test_mismatched_page_list_lengths_still_hydrate_stored_pages() -> None:
     repository = FakeEvidenceRepository(
         {
             "ev_ok": make_record(
@@ -527,8 +530,10 @@ def test_mismatched_page_list_lengths_are_excluded() -> None:
         }
     )
     result = hydrate(repository, [make_candidate()])
-    assert result.evidence == ()
-    assert exclusion_map(result) == {"ev_ok": EvidenceExclusionReason.PAGES_UNAVAILABLE}
+    assert [item.evidence_id for item in result.evidence] == ["ev_ok"]
+    assert result.evidence[0].printed_pages == ["123", "124"]
+    assert result.evidence[0].pdf_pages == [145]
+    assert exclusion_map(result) == {}
 
 
 def test_empty_exact_query_does_not_construct_evidence() -> None:

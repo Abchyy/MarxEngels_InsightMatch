@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import asyncio
+import sqlite3
 from collections.abc import Mapping, Sequence
 
 from marx_engels.contracts import Candidate, SearchScope
 from marx_engels.storage.sqlite import SQLiteDatabase
+from marx_engels.storage.sqlite_runtime import run_exclusive_or_unavailable
 
 _CHANNEL = "exact"
 
@@ -43,24 +45,6 @@ FROM (
       AND v.release_status = 'published'
       AND e.release_status = 'published'
       AND c.release_status = 'published'
-      AND EXISTS (
-          SELECT 1
-          FROM passage_page AS pp
-          JOIN page_map AS pm ON pm.page_id = pp.page_id
-          WHERE pp.evidence_id = p.evidence_id
-      )
-      AND NOT EXISTS (
-          SELECT 1
-          FROM passage_page AS pp
-          JOIN page_map AS pm ON pm.page_id = pp.page_id
-          WHERE pp.evidence_id = p.evidence_id
-            AND (
-                pm.mapping_status != 'verified'
-                OR pm.pdf_page < 1
-                OR pm.printed_page_label IS NULL
-                OR length(trim(pm.printed_page_label)) = 0
-            )
-      )
       AND instr(p.verified_text, :query) > 0
 """
 
@@ -110,12 +94,11 @@ class SQLiteExactSearchIndex:
 def _query_exact_matches(
     database: SQLiteDatabase, sql: str, parameters: Mapping[str, object]
 ) -> list[tuple[str, int]]:
-    connection = database.connect()
-    try:
+    def operation(connection: sqlite3.Connection) -> list[tuple[str, int]]:
         rows = connection.execute(sql, parameters).fetchall()
         return [(str(row["evidence_id"]), int(row["exact_match_count"])) for row in rows]
-    finally:
-        connection.close()
+
+    return run_exclusive_or_unavailable(database, operation)
 
 
 def _scope_filter_clause(scope: SearchScope) -> tuple[list[str], dict[str, object]]:

@@ -1,4 +1,4 @@
-.PHONY: setup lint typecheck test test-unit test-contract test-integration test-regression migrate verify-corpus build-index verify-index run-api run-web run-demo-api run-demo-web export-openapi freeze-contracts verify-contracts verify clean
+.PHONY: setup lint typecheck test test-unit test-contract test-integration test-regression migrate verify-corpus init-local-corpus export-cloud-ingest build-index verify-index run-api run-web run-demo-api run-demo-web export-openapi freeze-contracts verify-contracts verify clean
 
 setup:
 	uv sync --all-groups
@@ -33,6 +33,13 @@ migrate:
 
 verify-corpus:
 	uv run python -m marx_engels.ingestion.cli verify-corpus
+	uv run python -m marx_engels.storage.cli verify-local-asset
+
+init-local-corpus:
+	uv run python -m marx_engels.storage.cli init-local-corpus
+
+export-cloud-ingest:
+	uv run python -m marx_engels.storage.cli export-cloud-ingest
 
 build-index:
 	uv run python -m marx_engels.indexing.cli build-index

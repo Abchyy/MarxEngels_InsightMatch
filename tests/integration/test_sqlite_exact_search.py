@@ -474,7 +474,7 @@ def test_page_size_skips_unpublished_work_before_limit(
     assert "p_sort_c" not in _ids(_search(index, QUERY_PERSON, _scope()))
 
 
-def test_invalid_page_mapping_is_excluded_before_limit(
+def test_unverified_page_mapping_does_not_block_exact_match(
     exact_index: tuple[SQLiteExactSearchIndex, SQLiteDatabase],
 ) -> None:
     index, database = exact_index
@@ -482,5 +482,6 @@ def test_invalid_page_mapping_is_excluded_before_limit(
         connection.execute(
             "UPDATE page_map SET mapping_status = 'candidate' WHERE page_id = 'page_p_sort_a'"
         )
-    assert _ids(_search(index, QUERY_PERSON, _scope(), limit=1)) == ["p_sort_c"]
-    assert "p_sort_a" not in _ids(_search(index, QUERY_PERSON, _scope()))
+    ids = _ids(_search(index, QUERY_PERSON, _scope()))
+    assert "p_sort_a" in ids
+    assert "p_sort_c" in ids

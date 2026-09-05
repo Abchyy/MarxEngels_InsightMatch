@@ -6,7 +6,7 @@
 - Only `EvidenceService` may construct a public `Evidence` object.
 - Keep the four pipelines independent behind `SearchPipeline`.
 - Do not commit PDFs, OCR output, SQLite files, LanceDB directories, secrets or generated runtime data.
-- Single exception: `corpora/marx_engels_collected_works_cn/sqlite/corpus.db` is a versioned unverified/draft local demo asset. Do not extend this exception to any other database or runtime file.
+- Canonical SQLite is a Git-ignored local asset. Track only the manifest, expected SHA-256, and init docs. Never write the Canonical seed at runtime.
 - Use the English `make` commands documented in `README.md`.
 - Add or update tests for every behavior change.
 - Do not create worktrees unless the project owner explicitly asks.

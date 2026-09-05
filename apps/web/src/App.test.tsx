@@ -21,6 +21,7 @@ describe("SearchApp demo chrome", () => {
     expect(html).not.toContain("demo-banner");
     expect(html).not.toContain("demo-examples");
     expect(html).toContain("马克思恩格斯文集");
+    expect(html).toContain("未经人工校勘");
     expect(html).not.toContain("协作劳动会改变群体关系");
     expect(html).not.toContain("公共讨论如何变化");
     expect(html).not.toContain("生产关系与制度安排");

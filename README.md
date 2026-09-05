@@ -1,6 +1,6 @@
 # Marx–Engels InsightMatch
 
-面向《马克思恩格斯文集》十卷的可核验原典检索助手。当前仓库已具备模块边界、公共契约、数据库迁移、API、前端检索工作流、四条检索管线、离线语料处理管线，以及一份版本化的十卷 SQLite 数据资产。该数据库仍为 unverified/draft，尚未作为已核验正式引文发布。
+面向《马克思恩格斯文集》十卷的可核验原典检索助手。当前仓库已具备模块边界、公共契约、数据库迁移、API、前端检索工作流、四条检索管线、离线语料处理管线，以及一份 Git 忽略的十卷 Canonical SQLite 本地资产。普通运行时的 Exact 模式从该资产的 runtime 副本检索，并由 `EvidenceService` 回填 SQLite 原文。该发布策略是 source-derived trusted，不是人工校勘。
 
 ## Architecture baseline
 
@@ -41,7 +41,7 @@ Prerequisites: Python 3.12, `uv`, Node.js 22+, `pnpm`, and `make`.
 ```bash
 make setup
 cp .env.example .env
-make migrate
+make init-local-corpus
 make verify
 make run-api
 ```
@@ -66,6 +66,8 @@ make test-contract
 make test-integration
 make migrate
 make verify-corpus
+make init-local-corpus
+make export-cloud-ingest
 make build-index
 make verify-index
 make run-api
@@ -93,22 +95,32 @@ make verify-corpus
 
 `MINERU_API_TOKEN` stays in local `.env` and must never be printed or committed. MinerU Markdown is Raw extraction, not a verified quotation.
 
-Commands must not access production implicitly. Corpus PDFs, OCR/MinerU output, runtime SQLite databases, LanceDB data and model credentials remain excluded from Git, with one documented exception: `corpora/marx_engels_collected_works_cn/sqlite/corpus.db`.
+Commands must not access production implicitly. Corpus PDFs, OCR/MinerU output, SQLite databases, LanceDB data, cloud-export artifacts, and model credentials remain excluded from Git.
 
-## Versioned SQLite data asset
+## Local Canonical SQLite asset
 
-The unverified/draft ten-volume snapshot is versioned at:
+The ten-volume Canonical seed is a Git-ignored local file:
 
 `corpora/marx_engels_collected_works_cn/sqlite/corpus.db`
 
-This is the only SQLite file allowed in Git. It is a local demo product asset, not a published verified release:
+Git tracks the expected SHA-256, catalog counts, and init docs only:
 
-- SQLite remains the sole authoritative source for text and metadata.
-- All passages in this snapshot remain `unverified` / `draft`.
-- Do not treat Clean text or FTS `search_text` as a formal quotation.
-- Do not commit other SQLite files, PDFs, OCR/MinerU output, LanceDB directories, secrets, or `runtime-data/`.
+- `corpora/marx_engels_collected_works_cn/sqlite/local_asset.yaml`
+- `corpora/marx_engels_collected_works_cn/sqlite/corpus.sha256`
 
-See `corpora/marx_engels_collected_works_cn/README.md` and `docs/development/CORPUS_PIPELINE.md`.
+Obtain the seed out of band, then:
+
+```bash
+make init-local-corpus
+```
+
+This copies the seed to `runtime-data/sqlite/corpus.db` and applies the source-derived trusted local publication. The Canonical seed is never written at runtime. Missing files, hash mismatch, a non-empty seed `-wal` sidecar, or incomplete init fail closed; the app does not create an empty corpus and does not fall back to synthetic data. Read-only seed checks use the hashed main file only and do not create `-wal` or `-shm`.
+
+This publication does **not** mean the text has been collated by a person. Final quotations always come from SQLite `verified_text` via `EvidenceService`. Cloud or FTS `search_text` is retrieval aid only.
+
+`make export-cloud-ingest` writes deterministic retrieval-unit files under `runtime-data/cloud-export/` for a later upload step. It does not call any cloud API.
+
+See `docs/adr/0002-local-canonical-corpus-and-cloud-ready-baseline.md`, `corpora/marx_engels_collected_works_cn/README.md`, and `docs/development/CORPUS_PIPELINE.md`.
 
 ## Planned worktree ownership
 
@@ -165,8 +177,10 @@ clicked into the form:
 | timeline | 公共讨论如何变化 |
 | thematic | 生产关系与制度安排 |
 
-`make run-api` and `make run-web` are unchanged and still use the production
-composition root. Do not commit the temporary SQLite file created for the demo.
+`make run-api` and `make run-web` use the ordinary composition root and the
+real ten-volume runtime SQLite after `make init-local-corpus`. Unimplemented
+semantic modes report `PIPELINE_NOT_IMPLEMENTED` and never switch to synthetic
+data. Do not commit runtime SQLite, demo SQLite, or cloud-export artifacts.
 
 ## Design documents
 

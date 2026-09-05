@@ -27,6 +27,21 @@ class VectorIndex(Protocol):
     ) -> list[Candidate]: ...
 
 
+class Retriever(Protocol):
+    """Provider-neutral query-in / Candidate-out port for future cloud retrieval.
+
+    ``ExactSearchIndex`` already covers local exact search. ``LexicalIndex`` covers
+    local FTS. ``VectorIndex`` requires the caller to embed first, which would push
+    a cloud embedding SDK, knowledge-base ID, or vendor hit schema into pipelines.
+    A later Bailian adapter should implement this protocol and return ``Candidate``
+    rows that contain ``evidence_id`` / ``retrieval_unit_ids`` and never ``search_text``.
+    """
+
+    async def retrieve(
+        self, query: str, scope: SearchScope, limit: int
+    ) -> list[Candidate]: ...
+
+
 class EvidenceRepository(Protocol):
     """Batch reader for SQLite-authoritative passage records.
 
