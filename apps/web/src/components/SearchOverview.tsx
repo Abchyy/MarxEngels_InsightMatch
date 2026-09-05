@@ -77,7 +77,7 @@ export function SearchOverview({ response, selectedMode, phase }: Props) {
           {response.overview.volume_count}
         </dd>
         <dt>数据版本</dt>
-        <dd>
+        <dd className="data-version">
           {response.release.data_version}
           {response.release.index_version ? `（索引 ${response.release.index_version}）` : ""}
         </dd>

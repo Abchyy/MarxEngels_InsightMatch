@@ -20,14 +20,28 @@ interface Props {
   /** 非空时仅这些模式可选；用于 awaiting_mode_selection 收紧选择范围。 */
   allowedModes?: readonly SearchMode[] | null;
   disabled?: boolean;
+  /**
+   * 当前运行环境尚未接入的模式（普通环境为 claim/timeline/thematic）。
+   * 仅展示可用性徽章，不改变可选性：用户选择后由后端返回
+   * PIPELINE_NOT_IMPLEMENTED 说明，awaiting 流程也不会因此死锁。
+   */
+  unavailableModes?: readonly SearchMode[];
 }
 
-export function ModeSelector({ value, onChange, allowedModes = null, disabled = false }: Props) {
+export function ModeSelector({
+  value,
+  onChange,
+  allowedModes = null,
+  disabled = false,
+  unavailableModes = [],
+}: Props) {
+  const showAvailability = unavailableModes.length > 0;
   return (
     <fieldset className="mode-selector">
       <legend>检索方式</legend>
       {MODES.map((item) => {
         const modeDisabled = disabled || (allowedModes !== null && !allowedModes.includes(item.mode));
+        const unavailable = unavailableModes.includes(item.mode);
         // 以空格分隔拼接，保证 selected/disabled 可同时命中对应 CSS 规则。
         const className = [
           value === item.mode ? "selected" : "",
@@ -45,8 +59,17 @@ export function ModeSelector({ value, onChange, allowedModes = null, disabled = 
               disabled={modeDisabled}
               onChange={() => onChange(item.mode)}
             />
-            <span>
-              <strong>{MODE_LABELS[item.mode]}</strong>
+            <span className="mode-option">
+              <strong className="mode-option__name">
+                {MODE_LABELS[item.mode]}
+                {showAvailability && (
+                  <span
+                    className={`mode-badge ${unavailable ? "mode-badge--unavailable" : "mode-badge--available"}`}
+                  >
+                    {unavailable ? "尚未实现" : "当前可用"}
+                  </span>
+                )}
+              </strong>
               <small>{item.description}</small>
             </span>
           </label>

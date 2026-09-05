@@ -67,8 +67,8 @@ export function SearchApp({ demoMode }: { demoMode: boolean }) {
   }
 
   return (
-    <main>
-      <header>
+    <main className="app-shell">
+      <header className="site-header">
         {demoMode && (
           <p className="demo-banner" role="status">
             {SYNTHETIC_DEMO_BANNER}
@@ -76,7 +76,7 @@ export function SearchApp({ demoMode }: { demoMode: boolean }) {
         )}
         <p className="eyebrow">可核验的原典检索</p>
         <h1>马恩文本检索助手</h1>
-        <p>
+        <p className="scope-line">
           {demoMode
             ? "当前范围：合成测试语料（禁止作为引文）"
             : "当前范围：《马克思恩格斯文集》十卷"}
@@ -89,8 +89,10 @@ export function SearchApp({ demoMode }: { demoMode: boolean }) {
         )}
       </header>
 
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="query">输入词语、观点、问题或研究领域</label>
+      <form className="search-panel" onSubmit={handleSubmit}>
+        <label className="query-label" htmlFor="query">
+          输入词语、观点、问题或研究领域
+        </label>
         <textarea
           id="query"
           value={state.query}
@@ -137,6 +139,7 @@ export function SearchApp({ demoMode }: { demoMode: boolean }) {
           onChange={(mode) => machine.selectMode(mode)}
           allowedModes={awaiting ? state.allowedModes : null}
           disabled={busy}
+          unavailableModes={demoMode ? [] : ["claim", "timeline", "thematic"]}
         />
         {awaiting && (
           <p className="hint" role="status">
@@ -148,7 +151,7 @@ export function SearchApp({ demoMode }: { demoMode: boolean }) {
       </form>
 
       <section className="status" aria-live="polite">
-        <h2>状态</h2>
+        <h2 className="status__heading">状态</h2>
         {state.phase === "idle" && (
           <p>
             输入后可直接开始检索，系统会先给出检索方式建议；问题或研究领域需由你明确选择呈现方式。
@@ -167,8 +170,11 @@ export function SearchApp({ demoMode }: { demoMode: boolean }) {
           </p>
         )}
         {state.phase === "searching" && <p>正在检索，请稍候…新的查询会自动取消本次请求。</p>}
+        {(state.phase === "success" || state.phase === "empty" || state.phase === "partial") && (
+          <p>检索完成。</p>
+        )}
         {state.phase === "error" && (
-          <div role="alert">
+          <div className="error-box" role="alert">
             <p>
               {state.error.code === "PIPELINE_NOT_IMPLEMENTED"
                 ? demoMode
@@ -183,18 +189,19 @@ export function SearchApp({ demoMode }: { demoMode: boolean }) {
             </p>
           </div>
         )}
-        {result && (
-          <ResultPage
-            response={result.response}
-            selectedMode={result.selectedMode}
-            phase={result.phase}
-            matchQuery={result.response.query.trim()}
-            exactSort={exactSort}
-            onExactSortChange={setExactSort}
-            onSuggestModeSwitch={handleSuggestModeSwitch}
-          />
-        )}
       </section>
+
+      {result && (
+        <ResultPage
+          response={result.response}
+          selectedMode={result.selectedMode}
+          phase={result.phase}
+          matchQuery={result.response.query.trim()}
+          exactSort={exactSort}
+          onExactSortChange={setExactSort}
+          onSuggestModeSwitch={handleSuggestModeSwitch}
+        />
+      )}
     </main>
   );
 }
